@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Bem-vindo</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h3>Bem-vindo ao Sistema Divisor de Contas</h3>
+            <h:panelGrid columns="1">
+                <h:panelGrid columns="2">
+                    <h:outputLabel for="unome" 
+                                   value="Nome de usuário: " />
+                    <h:inputText id="unome" 
+                                 required="true"
+                                 value="#{loginBean.usuario.UNome}"
+                                 requiredMessage="Informe o nome de usuário." />
+
+                    <h:outputLabel for="usenha" 
+                                   value="Senha: " />
+                    <h:inputSecret id="usenha" 
+                                 required="true"
+                                 value="#{loginBean.usuario.USenha}"
+                                 requiredMessage="Informe a senha." />
+                </h:panelGrid>
+
+                <h:panelGrid columns="2" 
+                             style="float: right">
+                    <h:commandButton action="#{loginBean.login()}"
+                                     value="Entrar" />
+                    <h:commandButton immediate="true" 
+                                     action="#{navigationBean.redirectCadastroUsuario()}" 
+                                     value="Cadastrar" />
+                </h:panelGrid>
+            </h:panelGrid>            
+            <h:messages errorStyle="color: red" 
+                        infoStyle="color: green" />
+        </h:form>
+    </h:body>
+</html>
+
