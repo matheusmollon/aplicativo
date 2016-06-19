@@ -118,6 +118,22 @@ public class UsuarioJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<Usuario> findUsuarioLike(String parameter) {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            Query query = em.createNamedQuery("Usuario.findAllUNomeLike");
+            query.setParameter("uNome", "%" + parameter + "%");
+            return query.getResultList();
+        } catch (Exception ex) {
+            return null;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
 
     public Usuario findUsuario(String id) {
         EntityManager em = getEntityManager();
@@ -140,5 +156,5 @@ public class UsuarioJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

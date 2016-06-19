@@ -1,0 +1,10 @@
+/home/hideki/GitHub/grupo6/src/Aplicativo/src/main/java/br/web/bean/LoginBean.java
+/home/hideki/GitHub/grupo6/src/Aplicativo/src/main/java/br/jpa/controller/UsuarioJpaController.java
+/home/hideki/GitHub/grupo6/src/Aplicativo/src/main/java/br/web/bean/UsuarioBean.java
+/home/hideki/GitHub/grupo6/src/Aplicativo/src/main/java/br/web/bean/NavigationBean.java
+/home/hideki/GitHub/grupo6/src/Aplicativo/src/main/java/br/jpa/controller/exceptions/PreexistingEntityException.java
+/home/hideki/GitHub/grupo6/src/Aplicativo/src/main/java/br/jpa/controller/exceptions/IllegalOrphanException.java
+/home/hideki/GitHub/grupo6/src/Aplicativo/src/main/java/br/web/utils/SessionContext.java
+/home/hideki/GitHub/grupo6/src/Aplicativo/src/main/java/br/web/filter/LoginFilter.java
+/home/hideki/GitHub/grupo6/src/Aplicativo/src/main/java/br/jpa/controller/exceptions/NonexistentEntityException.java
+/home/hideki/GitHub/grupo6/src/Aplicativo/src/main/java/br/jpa/entity/Usuario.java

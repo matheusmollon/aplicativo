@@ -1,13 +1,29 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
     <h:head>
         <title>Sistema de Divisão de Contas</title>
     </h:head>
     <h:body>
         <h:form>
-            <h3>Você entrou no Sistema de Divisão de Contas.</h3>
+            <h2>Bem-vindo ao Sistema de Divisão de Contas #{usuarioBean.usuarioSession.UNome}!</h2>
+            <h:panelGrid columns="3">      
+                <h:commandButton action="#{navigationBean.redirectAtualizacaoUsuario()}"
+                                 value="Atualizar dados de usuário" />            
+
+                <h:commandButton action="#{navigationBean.redirectExclusaoUsuario()}"
+                                 value="Excluir conta do usuário" />            
+
+                <h:commandButton action="#{loginBean.logout()}"
+                                 value="Sair" />
+            </h:panelGrid>
+        </h:form>
+
+        <h:form>
+            <h3>Informações do usuário:</h3>
             <h:panelGrid columns="2">
                 <h:outputLabel for="uname" 
                                value="Nome de usuário: " />
@@ -24,11 +40,36 @@
                 <h:outputText id="ucelular" 
                               value="#{usuarioBean.usuarioSession.UCelular}" />
             </h:panelGrid>
-            <h:commandButton action="#{navigationBean.redirectAtualizacaoUsuario()}"
-                             value="Atualizar dados de usuário" />
-            <br />
-            <h:commandButton action="#{loginBean.logout()}"
-                             value="Sair" />
+        </h:form>
+
+        <h:form>
+            <h3>Pesquisar usuários:</h3>
+            <h:panelGrid columns="2">
+                <h:outputLabel for="nome"
+                               value="Buscar:" />
+                <h:inputText id="nome" 
+                             required="true" 
+                             value="#{usuarioBean.usuario.UNome}" 
+                             autocomplete="off"
+                             pt:placeholder="Entre com um nome de usuário..." >
+                    <f:ajax event="keyup" render="resultTable" />
+                    <f:ajax event="keyup" render="resultOut" />
+                </h:inputText>
+            </h:panelGrid>           
+
+            <h:outputText id="resultOut" value="#{usuarioBean.searchNumbers()}" />
+            
+            <h:dataTable id="resultTable"
+                         value="#{usuarioBean.searchResults()}"
+                         var="usuario" >
+                <h:column>
+                    <h:outputText value="#{usuario.UNome}" />
+                </h:column>
+
+                <h:column>
+                    <h:commandButton value="Adicionar" />
+                </h:column>
+            </h:dataTable>           
         </h:form>
     </h:body>
 </html>

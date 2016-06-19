@@ -13,20 +13,21 @@
             <h:panelGrid columns="1">
                 <h:panelGrid columns="2">
                     <h:outputLabel for="unome" 
-                                   value="Nome de usuário: *" />
+                                   value="Nome de usuário: " />
                     <h:inputText id="unome" 
                                  required="true" 
                                  value="#{usuarioBean.usuarioSession.UNome}" 
                                  readonly="#{facesContext.renderResponse}" />
 
                     <h:outputLabel for="ucelular" 
-                                   value="Número de celular: *" />
+                                   value="Número de celular: " />
                     <h:inputText id="ucelular" 
                                  required="true" 
                                  value="#{usuarioBean.usuario.UCelular}" 
                                  requiredMessage="Informe um número de celular."
                                  validatorMessage="Número de celular inválido."
-                                 pt:placeholder="Ex.: 01 234567890">
+                                 pt:placeholder="Ex.: 01 234567890"
+                                 pt:autofocus="true">
                         <f:validateRegex pattern="[0-9]{2} [0-9]{8,9}" />
                     </h:inputText>
                 </h:panelGrid>

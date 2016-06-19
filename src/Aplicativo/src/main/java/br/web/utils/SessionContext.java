@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 /**
  *
  * @author hideki
+ * fonte: http://www.devmedia.com.br/trabalhando-com-sessao-e-filter-em-jsf/32358
  */
 public class SessionContext {
 

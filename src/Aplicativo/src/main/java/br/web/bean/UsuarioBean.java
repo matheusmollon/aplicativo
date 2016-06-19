@@ -8,6 +8,9 @@ package br.web.bean;
 import br.jpa.controller.UsuarioJpaController;
 import br.jpa.entity.Usuario;
 import br.web.utils.SessionContext;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -79,15 +82,50 @@ public class UsuarioBean {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
         UsuarioJpaController ujc = new UsuarioJpaController(emf);
 
-        Usuario usuarioAtualizado = ujc.findUsuario(SessionContext.getInstance().getSessionAttribute("uNome").toString());
+        Usuario usuarioAtualizado = this.getUsuarioSession();
         usuarioAtualizado.setUCelular(this.usuario.getUCelular());
 
         try {
             ujc.edit(usuarioAtualizado);
             FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/sistema.xhtml");
         } catch (Exception ex) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha na atualização dos dados!", "Falha na atualização dos dados!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             System.out.println(ex.toString());
         }
     }
-    
+
+    public void excluirUsuario() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
+        UsuarioJpaController ujc = new UsuarioJpaController(emf);
+
+        Usuario usuarioExcluido = this.getUsuarioSession();
+
+        if (this.usuario.getUSenha().equals(usuarioExcluido.getUSenha())) {
+            try {
+                ujc.destroy(usuarioExcluido.getUNome());
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/login.xhtml");
+            } catch (Exception ex) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha na exclusão do usuário!", "Falha na exclusão do usuário!");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                System.out.println(ex.toString());
+            }
+        } else {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Senha incorreta!", "Senha incorreta!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    public List<Usuario> searchResults() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
+        UsuarioJpaController ujc = new UsuarioJpaController(emf);
+        return ujc.findUsuarioLike(this.usuario.getUNome());
+    }
+
+    public String searchNumbers() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
+        UsuarioJpaController ujc = new UsuarioJpaController(emf);
+        return "Total de resultados: " + ujc.findUsuarioLike(this.usuario.getUNome()).size();
+    }
+
 }

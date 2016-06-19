@@ -38,4 +38,8 @@ public class NavigationBean {
         return "sistema?faces-redirect=true";
     }
     
+    public String redirectExclusaoUsuario() {
+        return "exclusao_usuario?faces-redirect=true";
+    }
+    
 }

@@ -61,6 +61,7 @@ public class LoginBean {
                 System.out.println(ex.toString());
             }
         } else {
+            this.usuario.setUNome("");
             FacesContext.getCurrentInstance().addMessage(
                     null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
