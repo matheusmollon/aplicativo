@@ -81,36 +81,6 @@
                 </h:column>
             </h:dataTable>
         </h:form>
-        
-        <h:form>
-            <h3>Pesquisar usuários:</h3>
-            <h:panelGrid columns="2">
-                <h:outputLabel for="nome"
-                               value="Buscar:" />
-                <h:inputText id="nome" 
-                             required="true" 
-                             value="#{usuarioBean.usuario.UNome}" 
-                             autocomplete="off"
-                             pt:placeholder="Entre com um nome de usuário..." >
-                    <f:ajax event="keyup" render="resultTable" />
-                    <f:ajax event="keyup" render="resultOut" />
-                </h:inputText>
-            </h:panelGrid>           
-
-            <h:outputText id="resultOut" value="#{usuarioBean.searchNumbers()}" />
-
-            <h:dataTable id="resultTable"
-                         value="#{usuarioBean.searchResults()}"
-                         var="usuario" >
-                <h:column>
-                    <h:outputText value="#{usuario.UNome}" />
-                </h:column>
-
-                <h:column>
-                    <h:commandButton value="Adicionar" />
-                </h:column>
-            </h:dataTable>           
-        </h:form>
     </h:body>
 </html>
 

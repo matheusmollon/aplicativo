@@ -8,6 +8,22 @@
         <filter-name>LoginFilter</filter-name>
         <filter-class>br.web.filter.LoginFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>VisualizarContaFilter</filter-name>
+        <filter-class>br.web.filter.VisualizarContaFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>GerenciarContaFilter</filter-name>
+        <filter-class>br.web.filter.GerenciarContaFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>GerenciarContaFilter</filter-name>
+        <url-pattern>/faces/gerenciar_conta.xhtml</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>VisualizarContaFilter</filter-name>
+        <url-pattern>/faces/visualizar_conta.xhtml</url-pattern>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>LoginFilter</filter-name>
         <url-pattern>/faces/sistema.xhtml</url-pattern>
