@@ -9,7 +9,7 @@ CREATE TABLE usuario(
 CREATE TABLE conta(
 	c_id 		SERIAL 		NOT NULL,
 	c_nome 		VARCHAR(30) 	NOT NULL,
-	c_valor		MONEY		NOT NULL,
+	c_valor		FLOAT		NOT NULL,
 	CONSTRAINT c_pk 
 		PRIMARY KEY(c_id)
 );
@@ -17,7 +17,7 @@ CREATE TABLE conta(
 CREATE TABLE produto(
 	p_id 		SERIAL		NOT NULL,
 	p_nome		VARCHAR(30)	NOT NULL,
-	p_valor		MONEY		NOT NULL,
+	p_valor		FLOAT		NOT NULL,
 	c_id		INTEGER		NOT NULL,
 	CONSTRAINT p_pk
 		PRIMARY KEY(p_id),
@@ -29,7 +29,7 @@ CREATE TABLE usuario_conta(
 	u_nome 		VARCHAR(30) 	NOT NULL,
 	c_id		INTEGER		NOT NULL,
 	u_c_gerente	VARCHAR(30)	NOT NULL,
-	u_c_valor	MONEY		NOT NULL,
+	u_c_valor	FLOAT		NOT NULL,
 	CONSTRAINT u_c_pk 
 		PRIMARY KEY(u_nome, c_id),
 	CONSTRAINT u_nome_fk 
