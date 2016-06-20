@@ -113,6 +113,13 @@ public class ContaBean {
         }
     }
     
+    public Conta getContaSession() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
+        ContaJpaController cjc = new ContaJpaController(emf);
+        
+        return cjc.findConta((int) SessionContext.getInstance().getSessionAttribute("cId"));
+    }
+    
     public void adicionarUsuarioConta(String uNome) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
         UsuarioJpaController ujc = new UsuarioJpaController(emf);

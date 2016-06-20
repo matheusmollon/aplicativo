@@ -7,7 +7,22 @@
     <h:head>
         <title>Gerenciar Conta</title>
     </h:head>
-    <h:body>        
+    <h:body>  
+        <h:form>
+            <h3>Informações da conta:</h3>
+            <h:panelGrid columns="2">                
+                <h:outputLabel for="cNome" 
+                               value="Nome da conta: " />
+                <h:outputText id="cNome" 
+                              value="#{contaBean.contaSession.CNome}" />
+
+                <h:outputLabel for="cValor" 
+                               value="Valor total: " />
+                <h:outputText id="cValor" 
+                              value="#{contaBean.contaSession.CValor}" />
+            </h:panelGrid>
+        </h:form>
+        
         <h:form>
             <h3>Pesquisar usuários:</h3>
             <h:panelGrid columns="2">
