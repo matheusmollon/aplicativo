@@ -6,16 +6,20 @@
 package br.jpa.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -27,6 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
     @NamedQuery(name = "Usuario.findAllUNomeLike", query = "SELECT u FROM Usuario u WHERE u.uNome like :uNome"),
+    @NamedQuery(name = "Usuario.findAllUNomeLikeCount", query = "SELECT count(u) FROM Usuario u WHERE u.uNome like :uNome"),
     @NamedQuery(name = "Usuario.findByUNome", query = "SELECT u FROM Usuario u WHERE u.uNome = :uNome"),
     @NamedQuery(name = "Usuario.findByUSenha", query = "SELECT u FROM Usuario u WHERE u.uSenha = :uSenha"),
     @NamedQuery(name = "Usuario.findByUCelular", query = "SELECT u FROM Usuario u WHERE u.uCelular = :uCelular")})
@@ -39,16 +44,21 @@ public class Usuario implements Serializable {
     @Size(min = 1, max = 30)
     @Column(name = "u_nome")
     private String uNome;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 30)
     @Column(name = "u_senha")
     private String uSenha;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "u_celular")
     private String uCelular;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    private Collection<UsuarioConta> usuarioContaCollection;
 
     public Usuario() {
     }
@@ -85,6 +95,15 @@ public class Usuario implements Serializable {
 
     public void setUCelular(String uCelular) {
         this.uCelular = uCelular;
+    }
+
+    @XmlTransient
+    public Collection<UsuarioConta> getUsuarioContaCollection() {
+        return usuarioContaCollection;
+    }
+
+    public void setUsuarioContaCollection(Collection<UsuarioConta> usuarioContaCollection) {
+        this.usuarioContaCollection = usuarioContaCollection;
     }
 
     @Override

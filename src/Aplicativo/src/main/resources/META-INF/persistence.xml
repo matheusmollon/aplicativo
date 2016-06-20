@@ -3,6 +3,8 @@
   <persistence-unit name="AplicativoPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>br.jpa.entity.Usuario</class>
+    <class>br.jpa.entity.UsuarioConta</class>
+    <class>br.jpa.entity.Conta</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://192.168.56.101:5432/grupo6"/>

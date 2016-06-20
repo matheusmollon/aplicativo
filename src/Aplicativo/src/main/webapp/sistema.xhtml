@@ -28,12 +28,7 @@
                 <h:outputLabel for="uname" 
                                value="Nome de usuário: " />
                 <h:outputText id="uname" 
-                              value="#{usuarioBean.usuarioSession.UNome}" />            
-
-                <h:outputLabel for="senha" 
-                               value="Senha: " />
-                <h:outputText id="senha" 
-                              value="#{usuarioBean.usuarioSession.USenha}" />
+                              value="#{usuarioBean.usuarioSession.UNome}" />
 
                 <h:outputLabel for="ucelular" 
                                value="Número de celular: " />
@@ -42,6 +37,51 @@
             </h:panelGrid>
         </h:form>
 
+        <h:form>
+            <h3>Contas:</h3>
+            <h:panelGrid columns="3">
+                <h:outputLabel for="novaconta"
+                               value="Nova conta: " />
+                <h:inputText id="novaconta" 
+                             required="true" 
+                             value="#{contaBean.conta.CNome}" 
+                             requiredMessage="Informe um nome para conta" 
+                             validatorMessage="Nome da conta deve ter no máximo 30 caracteres."
+                             pt:placeholder="Ex.: Costela, Vincenzo...">
+                    <f:validateLength minimum="1" maximum="30" />
+                </h:inputText>
+                <h:commandButton action="#{contaBean.criarConta()}"
+                                 value="Criar" />
+            </h:panelGrid>
+            <h:messages errorStyle="color: red" 
+                        infoStyle="color: green" />
+            <hr />
+            <h:dataTable id="contas"
+                         value="#{contaBean.contasParaUsuario()}"
+                         var="usuarioConta" >
+                <h:column>
+                    <f:facet name="header">Conta</f:facet>
+                    <h:outputText value="#{usuarioConta.conta.CNome}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Total</f:facet>
+                    <h:outputText value="#{usuarioConta.conta.CValor}" />
+                </h:column>
+
+                <h:column>                    
+                    <f:facet name="header">Valor Pago</f:facet>
+                    <h:outputText value="#{usuarioConta.UCValor}" />
+                </h:column>
+
+                <h:column>
+                    <h:commandButton immediate="true"
+                                     action="#{contaBean.acessarConta(usuarioConta)}"
+                                     value="Acessar" />
+                </h:column>
+            </h:dataTable>
+        </h:form>
+        
         <h:form>
             <h3>Pesquisar usuários:</h3>
             <h:panelGrid columns="2">
@@ -58,7 +98,7 @@
             </h:panelGrid>           
 
             <h:outputText id="resultOut" value="#{usuarioBean.searchNumbers()}" />
-            
+
             <h:dataTable id="resultTable"
                          value="#{usuarioBean.searchResults()}"
                          var="usuario" >

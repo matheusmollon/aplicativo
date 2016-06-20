@@ -5,6 +5,7 @@
  */
 package br.jpa.controller;
 
+import br.jpa.controller.exceptions.IllegalOrphanException;
 import br.jpa.controller.exceptions.NonexistentEntityException;
 import br.jpa.controller.exceptions.PreexistingEntityException;
 import br.jpa.entity.Usuario;
@@ -16,6 +17,9 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import br.jpa.entity.UsuarioConta;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  *
@@ -33,11 +37,29 @@ public class UsuarioJpaController implements Serializable {
     }
 
     public void create(Usuario usuario) throws PreexistingEntityException, Exception {
+        if (usuario.getUsuarioContaCollection() == null) {
+            usuario.setUsuarioContaCollection(new ArrayList<UsuarioConta>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Collection<UsuarioConta> attachedUsuarioContaCollection = new ArrayList<UsuarioConta>();
+            for (UsuarioConta usuarioContaCollectionUsuarioContaToAttach : usuario.getUsuarioContaCollection()) {
+                usuarioContaCollectionUsuarioContaToAttach = em.getReference(usuarioContaCollectionUsuarioContaToAttach.getClass(), usuarioContaCollectionUsuarioContaToAttach.getUsuarioContaPK());
+                attachedUsuarioContaCollection.add(usuarioContaCollectionUsuarioContaToAttach);
+            }
+            usuario.setUsuarioContaCollection(attachedUsuarioContaCollection);
             em.persist(usuario);
+            for (UsuarioConta usuarioContaCollectionUsuarioConta : usuario.getUsuarioContaCollection()) {
+                Usuario oldUsuarioOfUsuarioContaCollectionUsuarioConta = usuarioContaCollectionUsuarioConta.getUsuario();
+                usuarioContaCollectionUsuarioConta.setUsuario(usuario);
+                usuarioContaCollectionUsuarioConta = em.merge(usuarioContaCollectionUsuarioConta);
+                if (oldUsuarioOfUsuarioContaCollectionUsuarioConta != null) {
+                    oldUsuarioOfUsuarioContaCollectionUsuarioConta.getUsuarioContaCollection().remove(usuarioContaCollectionUsuarioConta);
+                    oldUsuarioOfUsuarioContaCollectionUsuarioConta = em.merge(oldUsuarioOfUsuarioContaCollectionUsuarioConta);
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findUsuario(usuario.getUNome()) != null) {
@@ -51,12 +73,45 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
-    public void edit(Usuario usuario) throws NonexistentEntityException, Exception {
+    public void edit(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Usuario persistentUsuario = em.find(Usuario.class, usuario.getUNome());
+            Collection<UsuarioConta> usuarioContaCollectionOld = persistentUsuario.getUsuarioContaCollection();
+            Collection<UsuarioConta> usuarioContaCollectionNew = usuario.getUsuarioContaCollection();
+            List<String> illegalOrphanMessages = null;
+            for (UsuarioConta usuarioContaCollectionOldUsuarioConta : usuarioContaCollectionOld) {
+                if (!usuarioContaCollectionNew.contains(usuarioContaCollectionOldUsuarioConta)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain UsuarioConta " + usuarioContaCollectionOldUsuarioConta + " since its usuario field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Collection<UsuarioConta> attachedUsuarioContaCollectionNew = new ArrayList<UsuarioConta>();
+            for (UsuarioConta usuarioContaCollectionNewUsuarioContaToAttach : usuarioContaCollectionNew) {
+                usuarioContaCollectionNewUsuarioContaToAttach = em.getReference(usuarioContaCollectionNewUsuarioContaToAttach.getClass(), usuarioContaCollectionNewUsuarioContaToAttach.getUsuarioContaPK());
+                attachedUsuarioContaCollectionNew.add(usuarioContaCollectionNewUsuarioContaToAttach);
+            }
+            usuarioContaCollectionNew = attachedUsuarioContaCollectionNew;
+            usuario.setUsuarioContaCollection(usuarioContaCollectionNew);
             usuario = em.merge(usuario);
+            for (UsuarioConta usuarioContaCollectionNewUsuarioConta : usuarioContaCollectionNew) {
+                if (!usuarioContaCollectionOld.contains(usuarioContaCollectionNewUsuarioConta)) {
+                    Usuario oldUsuarioOfUsuarioContaCollectionNewUsuarioConta = usuarioContaCollectionNewUsuarioConta.getUsuario();
+                    usuarioContaCollectionNewUsuarioConta.setUsuario(usuario);
+                    usuarioContaCollectionNewUsuarioConta = em.merge(usuarioContaCollectionNewUsuarioConta);
+                    if (oldUsuarioOfUsuarioContaCollectionNewUsuarioConta != null && !oldUsuarioOfUsuarioContaCollectionNewUsuarioConta.equals(usuario)) {
+                        oldUsuarioOfUsuarioContaCollectionNewUsuarioConta.getUsuarioContaCollection().remove(usuarioContaCollectionNewUsuarioConta);
+                        oldUsuarioOfUsuarioContaCollectionNewUsuarioConta = em.merge(oldUsuarioOfUsuarioContaCollectionNewUsuarioConta);
+                    }
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -74,7 +129,7 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws NonexistentEntityException {
+    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -85,6 +140,17 @@ public class UsuarioJpaController implements Serializable {
                 usuario.getUNome();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.", enfe);
+            }
+            List<String> illegalOrphanMessages = null;
+            Collection<UsuarioConta> usuarioContaCollectionOrphanCheck = usuario.getUsuarioContaCollection();
+            for (UsuarioConta usuarioContaCollectionOrphanCheckUsuarioConta : usuarioContaCollectionOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Usuario (" + usuario + ") cannot be destroyed since the UsuarioConta " + usuarioContaCollectionOrphanCheckUsuarioConta + " in its usuarioContaCollection field has a non-nullable usuario field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             em.remove(usuario);
             em.getTransaction().commit();
@@ -118,16 +184,32 @@ public class UsuarioJpaController implements Serializable {
             em.close();
         }
     }
-    
+
     public List<Usuario> findUsuarioLike(String parameter) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             Query query = em.createNamedQuery("Usuario.findAllUNomeLike");
-            query.setParameter("uNome", "%" + parameter + "%");
+            query.setParameter("uNome", parameter + "%");
             return query.getResultList();
         } catch (Exception ex) {
             return null;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+    
+    public int findUsuarioLikeCount(String parameter) {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            Query query = em.createNamedQuery("Usuario.findAllUNomeLikeCount");
+            query.setParameter("uNome", parameter + "%");
+            return ((Long) query.getSingleResult()).intValue();
+        } catch (Exception ex) {
+            return 0;
         } finally {
             if (em != null) {
                 em.close();
@@ -156,5 +238,5 @@ public class UsuarioJpaController implements Serializable {
             em.close();
         }
     }
-
+    
 }
