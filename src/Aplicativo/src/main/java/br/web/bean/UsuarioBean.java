@@ -114,16 +114,4 @@ public class UsuarioBean {
         }
     }
 
-    public List<Usuario> searchResults() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
-        UsuarioJpaController ujc = new UsuarioJpaController(emf);
-        return ujc.findUsuarioLike(this.usuario.getUNome());
-    }
-
-    public String searchNumbers() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
-        UsuarioJpaController ujc = new UsuarioJpaController(emf);
-        return "Total de resultados: " + ujc.findUsuarioLikeCount(this.usuario.getUNome());
-    }
-
 }

@@ -15,27 +15,49 @@
                                value="Buscar:" />
                 <h:inputText id="nome" 
                              required="true" 
-                             value="#{usuarioBean.usuario.UNome}" 
+                             value="#{searchBean.UNome}" 
                              autocomplete="off"
                              pt:placeholder="Entre com um nome de usuário..." >
                     <f:ajax event="keyup" render="resultTable" />
                     <f:ajax event="keyup" render="resultOut" />
                 </h:inputText>
-            </h:panelGrid>           
+            </h:panelGrid>  
 
-            <h:outputText id="resultOut" value="#{usuarioBean.searchNumbers()}" />
+            <h:messages errorStyle="color: red" 
+                        infoStyle="color: green" />
+
+            <h:outputText id="resultOut" value="#{searchBean.searchNumbers()}" />
 
             <h:dataTable id="resultTable"
-                         value="#{usuarioBean.searchResults()}"
+                         value="#{searchBean.searchResults()}"
                          var="usuario" >
                 <h:column>
                     <h:outputText value="#{usuario.UNome}" />
                 </h:column>
 
                 <h:column>
-                    <h:commandButton value="Adicionar" />
+                    <h:commandButton action="#{contaBean.adicionarUsuarioConta(usuario.UNome)}" 
+                                     value="Adicionar" /> 
                 </h:column>
             </h:dataTable>           
+        </h:form>
+
+        <h:form>
+            <h3>Usuários:</h3>
+            <h:dataTable value="#{contaBean.usuariosParaConta()}"
+                         var="usuarioConta" >
+                <h:column>
+                    <h:outputText value="#{usuarioConta.usuario.UNome}" />
+                </h:column>
+
+                <h:column>
+                    <h:commandButton value="Remover" />
+                </h:column>
+            </h:dataTable> 
+        </h:form>
+
+        <h:form>
+            <h3>Produtos:</h3>
         </h:form>
     </h:body>
 </html>

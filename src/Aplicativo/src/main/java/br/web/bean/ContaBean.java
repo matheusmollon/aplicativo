@@ -88,10 +88,17 @@ public class ContaBean {
         return ucjc.findUsuarioContaByUsuario(this.getUsuarioSession().getUNome());
     }
     
+    public List<UsuarioConta> usuariosParaConta() {        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
+        UsuarioContaJpaController ucjc = new UsuarioContaJpaController(emf);
+        
+        return ucjc.findUsuarioContaByConta((int) SessionContext.getInstance().getSessionAttribute("cId"));        
+    }
+    
     public void acessarConta(UsuarioConta usuarioConta) {
         SessionContext.getInstance().setSessionAttribute("cId", usuarioConta.getUsuarioContaPK().getCId());
         
-        if(SessionContext.getInstance().getSessionAttribute("uNome").equals(usuarioConta.getUsuarioContaPK().getUNome())) {
+        if(SessionContext.getInstance().getSessionAttribute("uNome").equals(usuarioConta.getUCGerente())) {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/gerenciar_conta.xhtml");
             } catch (IOException ex) {
@@ -104,6 +111,25 @@ public class ContaBean {
                 System.out.println(ex.toString());
             }
         }
+    }
+    
+    public void adicionarUsuarioConta(String uNome) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
+        UsuarioJpaController ujc = new UsuarioJpaController(emf);
+        ContaJpaController cjc = new ContaJpaController(emf);
+        UsuarioContaJpaController ucjc = new UsuarioContaJpaController(emf);
+
+        this.usuarioConta.setUsuario(ujc.findUsuario(uNome));
+        this.usuarioConta.setConta(cjc.findConta((int) SessionContext.getInstance().getSessionAttribute("cId")));
+        this.usuarioConta.setUCGerente(SessionContext.getInstance().getSessionAttribute("uNome").toString());
+        this.usuarioConta.setUCValor(0.00);
+        try {
+            ucjc.create(usuarioConta);
+        } catch (Exception ex) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha ao adicionar usuário na conta!", "Falha ao adicionar usuário na conta!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            System.out.println(ex.toString());
+        }        
     }
 
 }

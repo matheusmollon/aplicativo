@@ -9,9 +9,6 @@ import br.jpa.controller.UsuarioContaJpaController;
 import br.jpa.entity.UsuarioConta;
 import br.jpa.entity.UsuarioContaPK;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.servlet.Filter;
@@ -53,7 +50,7 @@ public class VisualizarContaFilter implements Filter {
             UsuarioContaJpaController ucjc = new UsuarioContaJpaController(emf);
             UsuarioConta uc = ucjc.findUsuarioConta(usuarioContaPK);
 
-            if (!uc.getUsuario().getUNome().equals(uNome)) {
+            if (!uc.getUCGerente().equals(uNome)) {
                 chain.doFilter(request, response);
             } else {
                 ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/faces/sistema.xhtml");
