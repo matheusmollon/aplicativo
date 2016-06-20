@@ -57,7 +57,7 @@
                         infoStyle="color: green" />
             <hr />
             <h:dataTable id="contas"
-                         value="#{contaBean.contasParaUsuario()}"
+                         value="#{usuarioContaBean.contasParaUsuario()}"
                          var="usuarioConta" >
                 <h:column>
                     <f:facet name="header">Conta</f:facet>
@@ -76,7 +76,7 @@
 
                 <h:column>
                     <h:commandButton immediate="true"
-                                     action="#{contaBean.acessarConta(usuarioConta)}"
+                                     action="#{usuarioContaBean.acessarConta(usuarioConta)}"
                                      value="Acessar" />
                 </h:column>
             </h:dataTable>
