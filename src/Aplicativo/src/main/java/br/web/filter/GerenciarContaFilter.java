@@ -45,10 +45,7 @@ public class GerenciarContaFilter implements Filter {
             String uNome = session.getAttribute("uNome").toString();
             int cId = (int) session.getAttribute("cId");
             UsuarioContaPK usuarioContaPK = new UsuarioContaPK(uNome, cId);
-
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
-            UsuarioContaJpaController ucjc = new UsuarioContaJpaController(emf);
-            UsuarioConta uc = ucjc.findUsuarioConta(usuarioContaPK);
+            UsuarioConta uc = UsuarioContaJpaController.getInstance().findUsuarioConta(usuarioContaPK);
 
             if (uc.getUCGerente().equals(uNome)) {
                 chain.doFilter(request, response);

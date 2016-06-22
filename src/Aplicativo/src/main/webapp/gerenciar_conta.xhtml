@@ -64,7 +64,8 @@
                 </h:column>
 
                 <h:column>
-                    <h:commandButton action="#{usuarioContaBean.adicionarUsuarioConta(usuario.UNome)}" 
+                    <h:commandButton immediate="true"
+                                     action="#{usuarioContaBean.adicionarUsuarioConta(usuario.UNome)}" 
                                      value="Adicionar" /> 
                 </h:column>
             </h:dataTable>           

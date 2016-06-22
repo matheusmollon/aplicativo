@@ -42,11 +42,9 @@ public class LoginBean {
     }
     
     public void login() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
-        UsuarioJpaController ujc = new UsuarioJpaController(emf);
         boolean valid = true;
 
-        Usuario usuarioBanco = ujc.findUsuario(usuario.getUNome());
+        Usuario usuarioBanco = UsuarioJpaController.getInstance().findUsuario(usuario.getUNome());
 
         if (usuarioBanco == null || !usuarioBanco.getUSenha().equals(usuario.getUSenha())) {
             valid = false;

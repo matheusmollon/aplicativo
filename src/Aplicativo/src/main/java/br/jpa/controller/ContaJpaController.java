@@ -19,17 +19,28 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
  * @author hideki
  */
 public class ContaJpaController implements Serializable {
-
-    public ContaJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
+    
+    private static ContaJpaController cjc;
     private EntityManagerFactory emf = null;
+
+    private ContaJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("AplicativoPU");
+    }
+    
+    public static ContaJpaController getInstance() {
+        if(cjc == null) {
+            cjc = new ContaJpaController();
+        }
+        
+        return cjc;
+    }
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();

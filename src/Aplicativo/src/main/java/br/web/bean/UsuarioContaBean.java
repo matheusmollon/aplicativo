@@ -8,7 +8,6 @@ package br.web.bean;
 import br.jpa.controller.ContaJpaController;
 import br.jpa.controller.UsuarioContaJpaController;
 import br.jpa.controller.UsuarioJpaController;
-import br.jpa.entity.Conta;
 import br.jpa.entity.Usuario;
 import br.jpa.entity.UsuarioConta;
 import br.web.utils.SessionContext;
@@ -47,24 +46,15 @@ public class UsuarioContaBean {
     }
 
     public Usuario getUsuarioSession() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
-        UsuarioJpaController ujc = new UsuarioJpaController(emf);
-
-        return ujc.findUsuario(SessionContext.getInstance().getSessionAttribute("uNome").toString());
+        return UsuarioJpaController.getInstance().findUsuario(SessionContext.getInstance().getSessionAttribute("uNome").toString());
     }
     
     public List<UsuarioConta> contasParaUsuario() {        
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
-        UsuarioContaJpaController ucjc = new UsuarioContaJpaController(emf);
-        
-        return ucjc.findUsuarioContaByUsuario(this.getUsuarioSession().getUNome());
+        return UsuarioContaJpaController.getInstance().findUsuarioContaByUsuario(this.getUsuarioSession().getUNome());
     }
     
     public List<UsuarioConta> usuariosParaConta() {        
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
-        UsuarioContaJpaController ucjc = new UsuarioContaJpaController(emf);
-        
-        return ucjc.findUsuarioContaByConta((int) SessionContext.getInstance().getSessionAttribute("cId"));        
+        return UsuarioContaJpaController.getInstance().findUsuarioContaByConta((int) SessionContext.getInstance().getSessionAttribute("cId"));        
     }
     
     public void acessarConta(UsuarioConta usuarioConta) {
@@ -86,17 +76,12 @@ public class UsuarioContaBean {
     }
     
     public void adicionarUsuarioConta(String uNome) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
-        UsuarioJpaController ujc = new UsuarioJpaController(emf);
-        ContaJpaController cjc = new ContaJpaController(emf);
-        UsuarioContaJpaController ucjc = new UsuarioContaJpaController(emf);
-
-        this.usuarioConta.setUsuario(ujc.findUsuario(uNome));
-        this.usuarioConta.setConta(cjc.findConta((int) SessionContext.getInstance().getSessionAttribute("cId")));
+        this.usuarioConta.setUsuario(UsuarioJpaController.getInstance().findUsuario(uNome));
+        this.usuarioConta.setConta(ContaJpaController.getInstance().findConta((int) SessionContext.getInstance().getSessionAttribute("cId")));
         this.usuarioConta.setUCGerente(SessionContext.getInstance().getSessionAttribute("uNome").toString());
         this.usuarioConta.setUCValor(0.00);
         try {
-            ucjc.create(usuarioConta);
+            UsuarioContaJpaController.getInstance().create(usuarioConta);
         } catch (Exception ex) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha ao adicionar usuário na conta!", "Falha ao adicionar usuário na conta!");
             FacesContext.getCurrentInstance().addMessage(null, msg);

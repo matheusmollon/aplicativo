@@ -10,9 +10,6 @@ import br.jpa.entity.Usuario;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.inject.Named;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  *
@@ -38,15 +35,11 @@ public class SearchBean {
     }
 
     public List<Usuario> searchResults() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
-        UsuarioJpaController ujc = new UsuarioJpaController(emf);
-        return ujc.findUsuarioLike(this.uNome);
+        return UsuarioJpaController.getInstance().findUsuarioLike(this.uNome);
     }
 
     public String searchNumbers() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
-        UsuarioJpaController ujc = new UsuarioJpaController(emf);
-        return "Total de resultados: " + ujc.findUsuarioLikeCount(this.uNome);
+        return "Total de resultados: " + UsuarioJpaController.getInstance().findUsuarioLikeCount(this.uNome);
     }
     
 }

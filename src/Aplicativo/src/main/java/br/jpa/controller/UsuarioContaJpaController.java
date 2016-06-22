@@ -19,17 +19,28 @@ import br.jpa.entity.UsuarioContaPK;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
  * @author hideki
  */
 public class UsuarioContaJpaController implements Serializable {
-
-    public UsuarioContaJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
+    
+    private static UsuarioContaJpaController ucjc;
     private EntityManagerFactory emf = null;
+
+    private UsuarioContaJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("AplicativoPU");
+    }
+    
+    public static UsuarioContaJpaController getInstance() {
+        if(ucjc == null) {
+            ucjc = new UsuarioContaJpaController();
+        }
+        
+        return ucjc;
+    }
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
