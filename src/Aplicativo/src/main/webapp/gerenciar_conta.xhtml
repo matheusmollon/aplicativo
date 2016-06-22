@@ -9,7 +9,7 @@
         <title>Gerenciar Conta</title>
     </h:head>
     <h:body>  
-        <c:set var="conta" value="#{contaBean.contaSession}" scope="request" />
+        <c:set var="conta" value="#{contaBean.contaSessionMenosGerente}" scope="request" />
 
         <h:form>
             <h:panelGrid columns="3">      
@@ -34,11 +34,6 @@
                                value="Nome da conta: " />
                 <h:outputText id="cNome" 
                               value="#{conta.CNome}" />
-
-                <h:outputLabel for="cGerente"
-                               value="Gerente da conta: " />
-                <h:outputText id="cGerente"
-                              value="#{conta.CGerente}" />
 
                 <h:outputLabel for="cValor" 
                                value="Valor total: " />
@@ -72,8 +67,7 @@
                 </h:column>
 
                 <h:column>
-                    <h:commandButton immediate="true"
-                                     action="#{usuarioContaBean.cadastrarUsuarioConta(usuario.UNome)}" 
+                    <h:commandButton action="#{usuarioContaBean.cadastrarUsuarioConta(usuario.UNome)}" 
                                      value="Adicionar" /> 
                 </h:column>
             </h:dataTable>           
@@ -81,6 +75,16 @@
 
         <h:form>
             <h3>Gerenciar usuários:</h3>
+            
+            <h:outputLabel for="cGerente"
+                           value="Gerente da conta: " />
+            <h:outputText id="cGerente"
+                          value="#{conta.CGerente}" />
+            
+            <br />
+            <br />
+            <h:outputText value="Usuários gerenciáveis:" />
+            
             <h:dataTable value="#{conta.usuarioContaCollection}"
                          var="usuarioConta" >
                 <h:column>
@@ -90,6 +94,11 @@
                 <h:column>
                     <h:commandButton action="#{usuarioContaBean.excluirUsuarioConta(usuarioConta)}"
                                      value="Remover" />
+                </h:column>
+
+                <h:column>
+                    <h:commandButton action="#{contaBean.tornarGerente(usuarioConta)}"
+                                     value="Tornar Gerente" />
                 </h:column>
             </h:dataTable> 
         </h:form>

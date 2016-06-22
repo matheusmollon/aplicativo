@@ -7,15 +7,15 @@
         <title>Visualizar Conta</title>
     </h:head>
     <h:body>  
-        <c:set var="conta" value="#{contaBean.contaSession}" scope="request" />
-        
+        <c:set var="conta" value="#{contaBean.contaSessionMenosGerente}" scope="request" />
+
         <h:form>
             <h:panelGrid columns="1">      
                 <h:commandButton action="#{navigationBean.redirectSistema()}"
                                  value="Voltar ao sistema principal" />
             </h:panelGrid>
         </h:form>
-        
+
         <h:form>
             <h3>Informações:</h3>
             <h:panelGrid columns="2">                
@@ -23,11 +23,6 @@
                                value="Nome da conta:" />
                 <h:outputText id="cNome" 
                               value="#{conta.CNome}" />
-
-                <h:outputLabel for="cGerente"
-                               value="Gerente da conta: " />
-                <h:outputText id="cGerente"
-                              value="#{conta.CGerente}" />
 
                 <h:outputLabel for="cValor" 
                                value="Valor total:" />
@@ -38,6 +33,15 @@
 
         <h:form>
             <h3>Usuários:</h3>
+
+            <h:outputLabel for="cGerente"
+                           value="Gerente da conta: " />
+            <h:outputText id="cGerente"
+                          value="#{conta.CGerente}" />
+            
+            <br />
+            <br />
+            <h:outputText value="Usuários gerenciáveis:" />
             <h:dataTable value="#{conta.usuarioContaCollection}"
                          var="usuarioConta" >
                 <h:column>
