@@ -53,13 +53,6 @@ public class UsuarioContaBean {
         return ujc.findUsuario(SessionContext.getInstance().getSessionAttribute("uNome").toString());
     }
     
-    public Conta getContaSession() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
-        ContaJpaController cjc = new ContaJpaController(emf);
-        
-        return cjc.findConta((int) SessionContext.getInstance().getSessionAttribute("cId"));
-    }
-    
     public List<UsuarioConta> contasParaUsuario() {        
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
         UsuarioContaJpaController ucjc = new UsuarioContaJpaController(emf);

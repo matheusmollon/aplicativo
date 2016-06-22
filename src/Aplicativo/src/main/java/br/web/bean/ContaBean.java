@@ -8,12 +8,16 @@ package br.web.bean;
 import br.jpa.controller.ContaJpaController;
 import br.jpa.controller.UsuarioContaJpaController;
 import br.jpa.controller.UsuarioJpaController;
+import br.jpa.controller.exceptions.IllegalOrphanException;
+import br.jpa.controller.exceptions.NonexistentEntityException;
 import br.jpa.entity.Conta;
 import br.jpa.entity.Usuario;
 import br.jpa.entity.UsuarioConta;
 import br.web.utils.SessionContext;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -78,6 +82,42 @@ public class ContaBean {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha na criação de nova conta!", "Falha na criação de nova conta!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             System.out.println(ex.toString());
+        }
+    }
+
+    public Conta getContaSession() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
+        ContaJpaController cjc = new ContaJpaController(emf);
+
+        return cjc.findConta((int) SessionContext.getInstance().getSessionAttribute("cId"));
+    }
+
+    public void atualizarConta() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
+        ContaJpaController cjc = new ContaJpaController(emf);
+
+        Conta contaAtualizada = this.getContaSession();
+        contaAtualizada.setCNome(this.conta.getCNome());
+
+        try {
+            cjc.edit(contaAtualizada);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/gerenciar_conta.xhtml");
+        } catch (Exception ex) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha na atualização da conta!", "Falha na atualização da conta!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            System.out.println(ex.toString());
+        }
+    }
+
+    public void excluirConta() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("AplicativoPU");
+        ContaJpaController cjc = new ContaJpaController(emf);
+        
+        try {
+            cjc.destroy((int) SessionContext.getInstance().getSessionAttribute("cId"));
+        } catch (IllegalOrphanException | NonexistentEntityException ex) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha na exclusão da conta!", "Falha na exclusão da conta!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
 

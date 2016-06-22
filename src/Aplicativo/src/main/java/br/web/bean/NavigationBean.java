@@ -42,4 +42,12 @@ public class NavigationBean {
         return "exclusao_usuario?faces-redirect=true";
     }
     
+    public String redirectGerenciarConta() {
+        return "gerenciar_conta?faces-redirect=true";
+    }
+    
+    public String redirectAtualizacaoConta() {
+        return "atualizacao_conta?faces-redirect=true";
+    }
+    
 }

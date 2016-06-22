@@ -16,6 +16,14 @@
         <filter-name>GerenciarContaFilter</filter-name>
         <filter-class>br.web.filter.GerenciarContaFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>AtualizacaoContaFilter</filter-name>
+        <filter-class>br.web.filter.AtualizacaoContaFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AtualizacaoContaFilter</filter-name>
+        <url-pattern>/faces/atualizacao_conta.xhtml</url-pattern>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>GerenciarContaFilter</filter-name>
         <url-pattern>/faces/gerenciar_conta.xhtml</url-pattern>
@@ -27,8 +35,6 @@
     <filter-mapping>
         <filter-name>LoginFilter</filter-name>
         <url-pattern>/faces/sistema.xhtml</url-pattern>
-        <url-pattern>/faces/atualizacao_usuario.xhtml</url-pattern>
-        <url-pattern>/faces/exclusao_usuario.xhtml</url-pattern>
     </filter-mapping>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
