@@ -28,7 +28,7 @@
                     infoStyle="color: green" />
 
         <h:form>
-            <h3>Informações da conta:</h3>
+            <h3>Informações:</h3>
             <h:panelGrid columns="2">                
                 <h:outputLabel for="cNome" 
                                value="Nome da conta: " />
@@ -48,7 +48,7 @@
         </h:form>
 
         <h:form>
-            <h3>Pesquisar usuários:</h3>
+            <h3>Adicionar usuários:</h3>
             <h:panelGrid columns="2">
                 <h:outputLabel for="nome"
                                value="Buscar:" />
@@ -80,7 +80,7 @@
         </h:form>
 
         <h:form>
-            <h3>Usuários:</h3>
+            <h3>Gerenciar usuários:</h3>
             <h:dataTable value="#{conta.usuarioContaCollection}"
                          var="usuarioConta" >
                 <h:column>
@@ -88,7 +88,8 @@
                 </h:column>
 
                 <h:column>
-                    <h:commandButton value="Remover" />
+                    <h:commandButton action="#{usuarioContaBean.excluirUsuarioConta(usuarioConta)}"
+                                     value="Remover" />
                 </h:column>
             </h:dataTable> 
         </h:form>

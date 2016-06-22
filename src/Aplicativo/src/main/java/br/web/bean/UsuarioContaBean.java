@@ -8,10 +8,13 @@ package br.web.bean;
 import br.jpa.controller.ContaJpaController;
 import br.jpa.controller.UsuarioContaJpaController;
 import br.jpa.controller.UsuarioJpaController;
+import br.jpa.controller.exceptions.NonexistentEntityException;
 import br.jpa.entity.Usuario;
 import br.jpa.entity.UsuarioConta;
 import br.web.utils.SessionContext;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -24,9 +27,9 @@ import javax.faces.context.FacesContext;
 @ManagedBean
 @RequestScoped
 public class UsuarioContaBean {
-    
+
     private UsuarioConta usuarioConta;
-    
+
     /**
      * Creates a new instance of UsuarioContaBean
      */
@@ -45,11 +48,11 @@ public class UsuarioContaBean {
     public Usuario getUsuarioSession() {
         return UsuarioJpaController.getInstance().findUsuario(SessionContext.getInstance().getSessionAttribute("uNome").toString());
     }
-    
+
     public void acessarConta(UsuarioConta usuarioConta) {
         SessionContext.getInstance().setSessionAttribute("cId", usuarioConta.getUsuarioContaPK().getCId());
-        
-        if(SessionContext.getInstance().getSessionAttribute("uNome").equals(usuarioConta.getConta().getCGerente())) {
+
+        if (SessionContext.getInstance().getSessionAttribute("uNome").equals(usuarioConta.getConta().getCGerente())) {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/gerenciar_conta.xhtml");
             } catch (IOException ex) {
@@ -63,19 +66,34 @@ public class UsuarioContaBean {
             }
         }
     }
-    
+
     public void cadastrarUsuarioConta(String uNome) {
         this.usuarioConta.setUsuario(UsuarioJpaController.getInstance().findUsuario(uNome));
         this.usuarioConta.setConta(ContaJpaController.getInstance().findConta((int) SessionContext.getInstance().getSessionAttribute("cId")));
         this.usuarioConta.setUCValor(0.00);
-        
+
         try {
             UsuarioContaJpaController.getInstance().create(usuarioConta);
         } catch (Exception ex) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário já adicionado!", "Falha ao adicionar usuário na conta!");
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha ao adicionar usuário na conta!", "Falha ao adicionar usuário na conta!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             System.out.println(ex.toString());
-        }        
+        }
     }
-    
+
+    public void excluirUsuarioConta(UsuarioConta usuarioConta) {
+        if (usuarioConta.getUCValor() == 0.0 && !usuarioConta.getUsuario().getUNome().equals(usuarioConta.getConta().getCGerente())) {
+            try {
+                UsuarioContaJpaController.getInstance().destroy(usuarioConta.getUsuarioContaPK());
+            } catch (NonexistentEntityException ex) {
+                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha ao excluir usuário da conta!", "Falha ao excluir usuário da conta!");
+                FacesContext.getCurrentInstance().addMessage(null, msg);
+                System.out.println(ex.toString());
+            }
+        } else {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário consumindo produtos ou gerente não pode ser removido!", "Usuário consumindo produtos não pode ser removido!");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
 }
