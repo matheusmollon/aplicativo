@@ -10,9 +10,6 @@ import br.jpa.controller.exceptions.NonexistentEntityException;
 import br.jpa.controller.exceptions.PreexistingEntityException;
 import br.jpa.entity.Usuario;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
@@ -20,6 +17,9 @@ import javax.persistence.criteria.Root;
 import br.jpa.entity.UsuarioConta;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 /**
@@ -27,7 +27,7 @@ import javax.persistence.Persistence;
  * @author hideki
  */
 public class UsuarioJpaController implements Serializable {
-    
+
     private static UsuarioJpaController ujc;
     private EntityManagerFactory emf = null;
 

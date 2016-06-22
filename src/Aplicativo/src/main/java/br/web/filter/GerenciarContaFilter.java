@@ -9,8 +9,6 @@ import br.jpa.controller.UsuarioContaJpaController;
 import br.jpa.entity.UsuarioConta;
 import br.jpa.entity.UsuarioContaPK;
 import java.io.IOException;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -47,7 +45,7 @@ public class GerenciarContaFilter implements Filter {
             UsuarioContaPK usuarioContaPK = new UsuarioContaPK(uNome, cId);
             UsuarioConta uc = UsuarioContaJpaController.getInstance().findUsuarioConta(usuarioContaPK);
 
-            if (uc.getUCGerente().equals(uNome)) {
+            if (uc.getConta().getCGerente().equals(uNome)) {
                 chain.doFilter(request, response);
             } else {
                 ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/faces/sistema.xhtml");

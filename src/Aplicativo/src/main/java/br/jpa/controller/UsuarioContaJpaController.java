@@ -26,7 +26,7 @@ import javax.persistence.Persistence;
  * @author hideki
  */
 public class UsuarioContaJpaController implements Serializable {
-    
+
     private static UsuarioContaJpaController ucjc;
     private EntityManagerFactory emf = null;
 
