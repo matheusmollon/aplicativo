@@ -34,7 +34,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Conta.findAll", query = "SELECT c FROM Conta c"),
     @NamedQuery(name = "Conta.findByCId", query = "SELECT c FROM Conta c WHERE c.cId = :cId"),
     @NamedQuery(name = "Conta.findByCNome", query = "SELECT c FROM Conta c WHERE c.cNome = :cNome"),
-    @NamedQuery(name = "Conta.findByCValor", query = "SELECT c FROM Conta c WHERE c.cValor = :cValor")})
+    @NamedQuery(name = "Conta.findByCValor", query = "SELECT c FROM Conta c WHERE c.cValor = :cValor"),
+    @NamedQuery(name = "Conta.findByCGerente", query = "SELECT c FROM Conta c WHERE c.cGerente = :cGerente")})
 public class Conta implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,15 +44,24 @@ public class Conta implements Serializable {
     @Basic(optional = false)
     @Column(name = "c_id")
     private Integer cId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 30)
     @Column(name = "c_nome")
     private String cNome;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "c_valor")
     private double cValor;
+    
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 30)
+    @Column(name = "c_gerente")
+    private String cGerente;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "conta")
     private Collection<UsuarioConta> usuarioContaCollection;
 
@@ -62,10 +72,11 @@ public class Conta implements Serializable {
         this.cId = cId;
     }
 
-    public Conta(Integer cId, String cNome, double cValor) {
+    public Conta(Integer cId, String cNome, double cValor, String cGerente) {
         this.cId = cId;
         this.cNome = cNome;
         this.cValor = cValor;
+        this.cGerente = cGerente;
     }
 
     public Integer getCId() {
@@ -90,6 +101,14 @@ public class Conta implements Serializable {
 
     public void setCValor(double cValor) {
         this.cValor = cValor;
+    }
+
+    public String getCGerente() {
+        return cGerente;
+    }
+
+    public void setCGerente(String cGerente) {
+        this.cGerente = cGerente;
     }
 
     @XmlTransient

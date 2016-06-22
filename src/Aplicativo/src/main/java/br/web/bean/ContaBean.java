@@ -18,8 +18,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  *
@@ -59,11 +57,11 @@ public class ContaBean {
 
     public void criarConta() {
         this.conta.setCValor(0.00);
+        this.conta.setCGerente(SessionContext.getInstance().getSessionAttribute("uNome").toString());
         ContaJpaController.getInstance().create(conta);
 
         this.usuarioConta.setUsuario(this.getUsuarioSession());
         this.usuarioConta.setConta(conta);
-        this.usuarioConta.setUCGerente(this.getUsuarioSession().getUNome());
         this.usuarioConta.setUCValor(0.00);
         try {
             UsuarioContaJpaController.getInstance().create(usuarioConta);

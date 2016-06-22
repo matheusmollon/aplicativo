@@ -5,15 +5,7 @@
  */
 package br.web.filter;
 
-import br.jpa.controller.UsuarioContaJpaController;
-import br.jpa.entity.UsuarioConta;
-import br.jpa.entity.UsuarioContaPK;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;

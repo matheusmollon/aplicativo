@@ -16,7 +16,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -30,7 +29,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "UsuarioConta.findAll", query = "SELECT u FROM UsuarioConta u"),
     @NamedQuery(name = "UsuarioConta.findByUNome", query = "SELECT u FROM UsuarioConta u WHERE u.usuarioContaPK.uNome = :uNome"),
     @NamedQuery(name = "UsuarioConta.findByCId", query = "SELECT u FROM UsuarioConta u WHERE u.usuarioContaPK.cId = :cId"),
-    @NamedQuery(name = "UsuarioConta.findByUCGerente", query = "SELECT u FROM UsuarioConta u WHERE u.uCGerente = :uCGerente"),
     @NamedQuery(name = "UsuarioConta.findByUCValor", query = "SELECT u FROM UsuarioConta u WHERE u.uCValor = :uCValor")})
 public class UsuarioConta implements Serializable {
 
@@ -39,16 +37,13 @@ public class UsuarioConta implements Serializable {
     protected UsuarioContaPK usuarioContaPK;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 30)
-    @Column(name = "u_c_gerente")
-    private String uCGerente;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "u_c_valor")
     private double uCValor;
+    
     @JoinColumn(name = "c_id", referencedColumnName = "c_id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Conta conta;
+    
     @JoinColumn(name = "u_nome", referencedColumnName = "u_nome", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
@@ -60,9 +55,8 @@ public class UsuarioConta implements Serializable {
         this.usuarioContaPK = usuarioContaPK;
     }
 
-    public UsuarioConta(UsuarioContaPK usuarioContaPK, String uCGerente, double uCValor) {
+    public UsuarioConta(UsuarioContaPK usuarioContaPK, double uCValor) {
         this.usuarioContaPK = usuarioContaPK;
-        this.uCGerente = uCGerente;
         this.uCValor = uCValor;
     }
 
@@ -76,14 +70,6 @@ public class UsuarioConta implements Serializable {
 
     public void setUsuarioContaPK(UsuarioContaPK usuarioContaPK) {
         this.usuarioContaPK = usuarioContaPK;
-    }
-
-    public String getUCGerente() {
-        return uCGerente;
-    }
-
-    public void setUCGerente(String uCGerente) {
-        this.uCGerente = uCGerente;
     }
 
     public double getUCValor() {

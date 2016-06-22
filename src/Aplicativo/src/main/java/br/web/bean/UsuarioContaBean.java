@@ -12,13 +12,10 @@ import br.jpa.entity.Usuario;
 import br.jpa.entity.UsuarioConta;
 import br.web.utils.SessionContext;
 import java.io.IOException;
-import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  *
@@ -52,7 +49,7 @@ public class UsuarioContaBean {
     public void acessarConta(UsuarioConta usuarioConta) {
         SessionContext.getInstance().setSessionAttribute("cId", usuarioConta.getUsuarioContaPK().getCId());
         
-        if(SessionContext.getInstance().getSessionAttribute("uNome").equals(usuarioConta.getUCGerente())) {
+        if(SessionContext.getInstance().getSessionAttribute("uNome").equals(usuarioConta.getConta().getCGerente())) {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/gerenciar_conta.xhtml");
             } catch (IOException ex) {
@@ -70,7 +67,6 @@ public class UsuarioContaBean {
     public void cadastrarUsuarioConta(String uNome) {
         this.usuarioConta.setUsuario(UsuarioJpaController.getInstance().findUsuario(uNome));
         this.usuarioConta.setConta(ContaJpaController.getInstance().findConta((int) SessionContext.getInstance().getSessionAttribute("cId")));
-        this.usuarioConta.setUCGerente(SessionContext.getInstance().getSessionAttribute("uNome").toString());
         this.usuarioConta.setUCValor(0.00);
         try {
             UsuarioContaJpaController.getInstance().create(usuarioConta);
