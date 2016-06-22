@@ -10,6 +10,13 @@
         <c:set var="conta" value="#{contaBean.contaSession}" scope="request" />
         
         <h:form>
+            <h:panelGrid columns="1">      
+                <h:commandButton action="#{navigationBean.redirectSistema()}"
+                                 value="Voltar ao sistema principal" />
+            </h:panelGrid>
+        </h:form>
+        
+        <h:form>
             <h3>Informações da conta:</h3>
             <h:panelGrid columns="2">                
                 <h:outputLabel for="cNome" 

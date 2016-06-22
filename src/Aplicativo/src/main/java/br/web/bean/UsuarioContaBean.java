@@ -68,6 +68,7 @@ public class UsuarioContaBean {
         this.usuarioConta.setUsuario(UsuarioJpaController.getInstance().findUsuario(uNome));
         this.usuarioConta.setConta(ContaJpaController.getInstance().findConta((int) SessionContext.getInstance().getSessionAttribute("cId")));
         this.usuarioConta.setUCValor(0.00);
+        
         try {
             UsuarioContaJpaController.getInstance().create(usuarioConta);
         } catch (Exception ex) {
