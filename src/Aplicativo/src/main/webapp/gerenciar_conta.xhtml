@@ -10,7 +10,7 @@
     </h:head>
     <h:body>  
         <c:set var="conta" value="#{contaBean.contaSession}" scope="request" />
-        
+
         <h:form>
             <h:panelGrid columns="3">      
                 <h:commandButton action="#{navigationBean.redirectAtualizacaoConta()}" 
@@ -24,6 +24,9 @@
             </h:panelGrid>
         </h:form>
 
+        <h:messages errorStyle="color: red" 
+                    infoStyle="color: green" />
+
         <h:form>
             <h3>Informações da conta:</h3>
             <h:panelGrid columns="2">                
@@ -31,6 +34,11 @@
                                value="Nome da conta: " />
                 <h:outputText id="cNome" 
                               value="#{conta.CNome}" />
+
+                <h:outputLabel for="cGerente"
+                               value="Gerente da conta: " />
+                <h:outputText id="cGerente"
+                              value="#{conta.CGerente}" />
 
                 <h:outputLabel for="cValor" 
                                value="Valor total: " />
@@ -45,7 +53,6 @@
                 <h:outputLabel for="nome"
                                value="Buscar:" />
                 <h:inputText id="nome" 
-                             required="true" 
                              value="#{searchBean.UNome}" 
                              autocomplete="off"
                              pt:placeholder="Entre com um nome de usuário..." >
@@ -54,10 +61,8 @@
                 </h:inputText>
             </h:panelGrid>  
 
-            <h:messages errorStyle="color: red" 
-                        infoStyle="color: green" />
-
-            <h:outputText id="resultOut" value="#{searchBean.searchNumbers()}" />
+            <h:outputText id="resultOut"
+                          value="#{searchBean.searchNumbers()}" />
 
             <h:dataTable id="resultTable"
                          value="#{searchBean.searchResults()}"

@@ -72,7 +72,7 @@ public class UsuarioContaBean {
         try {
             UsuarioContaJpaController.getInstance().create(usuarioConta);
         } catch (Exception ex) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha ao adicionar usuário na conta!", "Falha ao adicionar usuário na conta!");
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Usuário já adicionado!", "Falha ao adicionar usuário na conta!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
             System.out.println(ex.toString());
         }        
