@@ -49,14 +49,6 @@ public class UsuarioContaBean {
         return UsuarioJpaController.getInstance().findUsuario(SessionContext.getInstance().getSessionAttribute("uNome").toString());
     }
     
-    public List<UsuarioConta> contasParaUsuario() {        
-        return UsuarioContaJpaController.getInstance().findUsuarioContaByUsuario(this.getUsuarioSession().getUNome());
-    }
-    
-    public List<UsuarioConta> usuariosParaConta() {        
-        return UsuarioContaJpaController.getInstance().findUsuarioContaByConta((int) SessionContext.getInstance().getSessionAttribute("cId"));        
-    }
-    
     public void acessarConta(UsuarioConta usuarioConta) {
         SessionContext.getInstance().setSessionAttribute("cId", usuarioConta.getUsuarioContaPK().getCId());
         
@@ -75,7 +67,7 @@ public class UsuarioContaBean {
         }
     }
     
-    public void adicionarUsuarioConta(String uNome) {
+    public void cadastrarUsuarioConta(String uNome) {
         this.usuarioConta.setUsuario(UsuarioJpaController.getInstance().findUsuario(uNome));
         this.usuarioConta.setConta(ContaJpaController.getInstance().findConta((int) SessionContext.getInstance().getSessionAttribute("cId")));
         this.usuarioConta.setUCGerente(SessionContext.getInstance().getSessionAttribute("uNome").toString());

@@ -206,38 +206,6 @@ public class UsuarioContaJpaController implements Serializable {
         }
     }
 
-    public List<UsuarioConta> findUsuarioContaByUsuario(String parameter) {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            Query query = em.createNamedQuery("UsuarioConta.findByUNome");
-            query.setParameter("uNome", parameter);
-            return query.getResultList();
-        } catch (Exception ex) {
-            return null;
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
-
-    public List<UsuarioConta> findUsuarioContaByConta(int parameter) {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            Query query = em.createNamedQuery("UsuarioConta.findByCId");
-            query.setParameter("cId", parameter);
-            return query.getResultList();
-        } catch (Exception ex) {
-            return null;
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
-
     public int getUsuarioContaCount() {
         EntityManager em = getEntityManager();
         try {

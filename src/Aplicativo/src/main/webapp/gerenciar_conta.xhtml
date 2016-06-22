@@ -65,7 +65,7 @@
 
                 <h:column>
                     <h:commandButton immediate="true"
-                                     action="#{usuarioContaBean.adicionarUsuarioConta(usuario.UNome)}" 
+                                     action="#{usuarioContaBean.cadastrarUsuarioConta(usuario.UNome)}" 
                                      value="Adicionar" /> 
                 </h:column>
             </h:dataTable>           
@@ -73,7 +73,7 @@
 
         <h:form>
             <h3>Usuários:</h3>
-            <h:dataTable value="#{usuarioContaBean.usuariosParaConta()}"
+            <h:dataTable value="#{contaBean.contaSession.usuarioContaCollection}"
                          var="usuarioConta" >
                 <h:column>
                     <h:outputText value="#{usuarioConta.usuario.UNome}" />
