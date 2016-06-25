@@ -27,33 +27,16 @@ import static org.junit.Assert.*;
  *
  * @author Matheus Mollon
  */
-public class CriarProdutoTeste {
+public class CriarProdutoTeste extends CRUDTestStrategyModificado {
+
+    private Produto p;
 
     public CriarProdutoTeste() {
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
     @Before
     public void setUp() {
-        ProdutoJpaController pjc = ProdutoJpaController.getInstance();
-        List<Produto> produtos = pjc.findProdutoEntities();
-
-        for (Produto p : produtos) {
-            if (p.getPNome().equals("TesteJUnitCRUD")) {
-                try {
-                    pjc.destroy(p.getPId());
-                } catch (NonexistentEntityException ex) {
-                    Logger.getLogger(CriarProdutoTeste.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
+        deletarProduto("TesteJUnitCRUD");
     }
 
     @After
@@ -64,7 +47,7 @@ public class CriarProdutoTeste {
     public void CriarTeste() {
         boolean armazenou;
         Produto produto = new Produto();
-        Conta conta = ContaJpaController.getInstance().findConta(100);
+        Conta conta = ContaJpaController.getInstance().findConta(super.id_conta);
         List<UsuarioConta> ucs = (List<UsuarioConta>) conta.getUsuarioContaCollection();
         List<Usuario> users = new ArrayList<>();
 
@@ -78,7 +61,7 @@ public class CriarProdutoTeste {
         produto.setUsuarioCollection(users);
 
         armazenou = ProdutoJpaController.getInstance().create(produto);
-        
+
         assertTrue(armazenou);
 
     }
