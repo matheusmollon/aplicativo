@@ -12,6 +12,7 @@ CREATE TABLE conta(
 	c_id 		SERIAL 		NOT NULL,
 	c_nome 		VARCHAR(30) 	NOT NULL,
 	c_valor		FLOAT		NOT NULL,
+	c_fechada	BOOLEAN		NOT NULL,
 	c_gerente	VARCHAR(30)	NOT NULL,
 	CONSTRAINT c_pk 
 		PRIMARY KEY(c_id)
