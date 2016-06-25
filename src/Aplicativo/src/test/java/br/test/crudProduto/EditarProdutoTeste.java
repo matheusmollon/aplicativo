@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
  *
  * @author Matheus Mollon
  */
-public class EditarProdutoTeste extends CRUDTestStrategyModificado {
+public class EditarProdutoTeste extends CRUDTest {
 
     private Produto p;
 

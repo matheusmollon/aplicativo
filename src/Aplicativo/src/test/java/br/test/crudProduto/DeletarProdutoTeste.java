@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
  *
  * @author Matheus Mollon
  */
-public class DeletarProdutoTeste extends CRUDTestStrategyModificado {
+public class DeletarProdutoTeste extends CRUDTest {
 
     private Produto p = new Produto();
     private ProdutoJpaController pjc;

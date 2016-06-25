@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
  *
  * @author Matheus Mollon
  */
-public class ConsultarProdutoTeste extends CRUDTestStrategyModificado {
+public class ConsultarProdutoTeste extends CRUDTest {
 
     public ConsultarProdutoTeste() {
     }

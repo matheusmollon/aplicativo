@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Matheus Mollon
  */
-public abstract class CRUDTestStrategyModificado {
+public abstract class CRUDTest {
 
     private ProdutoJpaController pjc;
     protected final int id_conta = 100;
