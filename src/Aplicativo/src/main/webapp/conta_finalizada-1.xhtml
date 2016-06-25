@@ -6,12 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Visualizar Conta</title>
-        <style type="text/css">
-            #info_box{
-                display: none;
-            }   
 
-        </style>
     </h:head>
     <h:body>  
         <c:set var="conta" value="#{contaBean.contaSessionMenosGerente}" scope="request" />
@@ -74,30 +69,25 @@
                     <f:facet name="header">Preço</f:facet>  
                     <center><h:outputText value ="#{p.PValor}"/></center>
                 </h:column>
+
+            </h:dataTable>
+        </h:form> 
+        <hr/>
+        <h3>Total por pessoa:</h3>
+        <h:form>
+            <h:dataTable value="#{contaBean.obterUsuarioConta()}" var="uc">
+
                 <h:column>
-                    <h:commandButton value="Info" onclick="document.getElementById('info_box').style.display = 'block'" action="#{produtoBean.getUsers_por_produto(p.PId)}">
-                        <f:ajax execute="click" render="form_info" />
-                    </h:commandButton>
+                    <f:facet name="header">Pessoa</f:facet>  
+                    <center> <h:outputText value ="#{uc.usuario.UNome}"/></center>
                 </h:column>
+                <h:column>
+                    <f:facet name="header">Total</f:facet>  
+                    <center> <h:outputText value ="#{uc.UCValor}"/> </center>
+                </h:column> 
             </h:dataTable>
         </h:form>
-
-        <div id="info_box">
-            <h:form id="form_info">
-
-                Detalhes:
-                <h:dataTable value="#{produtoBean.users_por_produto}" var="u1">
-                    <h:column>
-                        <f:facet name="header">Usuários:</f:facet>  
-                        <center> <h:outputText value ="#{u1.UNome}"/></center>
-                    </h:column> 
-                </h:dataTable>
-                <h:commandButton value ="Fechar" onclick="document.getElementById('info_box').style.display = 'none';"  actionListener="#{produtoBean.limparDetalhes}">
-                    <f:ajax execute="click" render="info_box" />
-                </h:commandButton>
-            </h:form>
-        </div>
-
     </h:body>
 </html>
+
 

@@ -16,6 +16,7 @@ import br.jpa.entity.UsuarioConta;
 import br.jpa.entity.UsuarioContaPK;
 import br.web.utils.SessionContext;
 import java.io.IOException;
+import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -60,6 +61,7 @@ public class ContaBean {
     public void criarConta() {
         this.conta.setCValor(0.00);
         this.conta.setCGerente(SessionContext.getInstance().getSessionAttribute("uNome").toString());
+        this.conta.setCFechada(false);
         ContaJpaController.getInstance().create(conta);
 
         this.usuarioConta.setUsuario(this.getUsuarioSession());
@@ -72,6 +74,19 @@ public class ContaBean {
             FacesContext.getCurrentInstance().addMessage(null, msg);
             System.out.println(ex.toString());
         }
+    }
+
+    public List<UsuarioConta> obterUsuarioConta() {
+        UsuarioContaJpaController ucjc = UsuarioContaJpaController.getInstance();
+        System.out.println("oi");
+        List<UsuarioConta> uc = ucjc.getUsuarioContaPorId((int) SessionContext.getInstance().getSessionAttribute("cId"));
+
+        for (UsuarioConta u : uc) {
+            System.out.println(u.getUCValor() + " , " + u.getUsuario().getUNome());
+        }
+
+        return uc;
+
     }
 
     public Conta getContaSessionMenosGerente() {
@@ -107,12 +122,12 @@ public class ContaBean {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha na exclusão da conta!", "Falha na exclusão da conta!");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             }
-        } else {            
+        } else {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Contas com outros usuários além do gerente não podem ser excluídas!", "Contas com outros usuários além do gerente não podem ser excluídas!");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
-    
+
     public void tornarGerente(UsuarioConta usuarioConta) {
         Conta contaNovoGerente = ContaJpaController.getInstance().findConta((int) SessionContext.getInstance().getSessionAttribute("cId"));
         contaNovoGerente.setCGerente(usuarioConta.getUsuarioContaPK().getUNome());
@@ -120,9 +135,9 @@ public class ContaBean {
         try {
             ContaJpaController.getInstance().edit(contaNovoGerente);
             FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/visualizar_conta.xhtml");
-        } catch (Exception ex) {            
+        } catch (Exception ex) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha ao substituir gerente!", "Falha ao substituir gerente!");
-            FacesContext.getCurrentInstance().addMessage(null, msg);            
+            FacesContext.getCurrentInstance().addMessage(null, msg);
             System.out.println(ex.toString());
         }
     }

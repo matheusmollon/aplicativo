@@ -13,6 +13,8 @@ import br.jpa.entity.Usuario;
 import br.jpa.entity.UsuarioConta;
 import br.web.utils.SessionContext;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
@@ -51,22 +53,30 @@ public class UsuarioContaBean {
 
     public void acessarConta(UsuarioConta usuarioConta) {
         SessionContext.getInstance().setSessionAttribute("cId", usuarioConta.getUsuarioContaPK().getCId());
-
-        if (SessionContext.getInstance().getSessionAttribute("uNome").equals(usuarioConta.getConta().getCGerente())) {
+        System.out.println(UsuarioContaJpaController.getInstance().findUsuarioConta(usuarioConta.getUsuarioContaPK()).getConta().getCFechada());
+        if (UsuarioContaJpaController.getInstance().findUsuarioConta(usuarioConta.getUsuarioContaPK()).getConta().getCFechada() == true) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/gerenciar_conta.xhtml");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/conta_finalizada-1.xhtml");
             } catch (IOException ex) {
                 System.out.println(ex.toString());
             }
         } else {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/visualizar_conta.xhtml");
-            } catch (IOException ex) {
-                System.out.println(ex.toString());
+            if (SessionContext.getInstance().getSessionAttribute("uNome").equals(usuarioConta.getConta().getCGerente())) {
+                try {
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/gerenciar_conta.xhtml");
+                } catch (IOException ex) {
+                    System.out.println(ex.toString());
+                }
+            } else {
+                try {
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/visualizar_conta.xhtml");
+                } catch (IOException ex) {
+                    System.out.println(ex.toString());
+                }
             }
         }
     }
-
+    
     public void cadastrarUsuarioConta(String uNome) {
         this.usuarioConta.setUsuario(UsuarioJpaController.getInstance().findUsuario(uNome));
         this.usuarioConta.setConta(ContaJpaController.getInstance().findConta((int) SessionContext.getInstance().getSessionAttribute("cId")));

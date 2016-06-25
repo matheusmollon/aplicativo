@@ -23,11 +23,11 @@ import javax.persistence.Persistence;
 
 /**
  *
- * @author hideki
+ * @author Matheus Mollon
  */
 public class UsuarioContaJpaController implements Serializable {
 
-    private static UsuarioContaJpaController ucjc;
+    public static UsuarioContaJpaController ucjc;
     private EntityManagerFactory emf = null;
 
     private UsuarioContaJpaController() {
@@ -217,6 +217,12 @@ public class UsuarioContaJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+
+    public List<UsuarioConta> getUsuarioContaPorId(int id) {
+        EntityManager em = emf.createEntityManager();
+        List<UsuarioConta> ucs = em.createNamedQuery("UsuarioContaPorIdConta", UsuarioConta.class).setParameter(1, id).getResultList();
+        return ucs;
     }
     
 }

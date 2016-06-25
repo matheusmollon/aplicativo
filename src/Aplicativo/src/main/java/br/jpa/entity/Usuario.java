@@ -12,6 +12,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -23,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author hideki
+ * @author Matheus Mollon
  */
 @Entity
 @Table(name = "usuario")
@@ -56,7 +57,8 @@ public class Usuario implements Serializable {
     @Size(min = 1, max = 20)
     @Column(name = "u_celular")
     private String uCelular;
-
+    @ManyToMany(mappedBy = "usuarioCollection")
+    private Collection<Produto> produtoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Collection<UsuarioConta> usuarioContaCollection;
 
@@ -95,6 +97,15 @@ public class Usuario implements Serializable {
 
     public void setUCelular(String uCelular) {
         this.uCelular = uCelular;
+    }
+
+    @XmlTransient
+    public Collection<Produto> getProdutoCollection() {
+        return produtoCollection;
+    }
+
+    public void setProdutoCollection(Collection<Produto> produtoCollection) {
+        this.produtoCollection = produtoCollection;
     }
 
     @XmlTransient

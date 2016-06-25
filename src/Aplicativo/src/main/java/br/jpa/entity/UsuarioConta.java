@@ -12,6 +12,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -20,7 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author hideki
+ * @author Matheus Mollon
  */
 @Entity
 @Table(name = "usuario_conta")
@@ -30,6 +32,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "UsuarioConta.findByUNome", query = "SELECT u FROM UsuarioConta u WHERE u.usuarioContaPK.uNome = :uNome"),
     @NamedQuery(name = "UsuarioConta.findByCId", query = "SELECT u FROM UsuarioConta u WHERE u.usuarioContaPK.cId = :cId"),
     @NamedQuery(name = "UsuarioConta.findByUCValor", query = "SELECT u FROM UsuarioConta u WHERE u.uCValor = :uCValor")})
+
+@NamedNativeQueries({
+    @NamedNativeQuery(
+            name = "UsuarioContaPorIdConta",
+            query = "select * from usuario_conta u, Conta pu where (u.c_id = pu.c_id) and pu.c_id=?;",
+            resultClass = UsuarioConta.class)
+})
 public class UsuarioConta implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,11 +48,11 @@ public class UsuarioConta implements Serializable {
     @NotNull
     @Column(name = "u_c_valor")
     private double uCValor;
-    
+
     @JoinColumn(name = "c_id", referencedColumnName = "c_id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Conta conta;
-    
+
     @JoinColumn(name = "u_nome", referencedColumnName = "u_nome", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario;
@@ -120,5 +129,5 @@ public class UsuarioConta implements Serializable {
     public String toString() {
         return "br.jpa.entity.UsuarioConta[ usuarioContaPK=" + usuarioContaPK + " ]";
     }
-    
+
 }

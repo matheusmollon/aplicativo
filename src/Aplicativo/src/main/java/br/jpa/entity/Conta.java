@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author hideki
+ * @author Matheus Mollon
  */
 @Entity
 @Table(name = "conta")
@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Conta.findByCId", query = "SELECT c FROM Conta c WHERE c.cId = :cId"),
     @NamedQuery(name = "Conta.findByCNome", query = "SELECT c FROM Conta c WHERE c.cNome = :cNome"),
     @NamedQuery(name = "Conta.findByCValor", query = "SELECT c FROM Conta c WHERE c.cValor = :cValor"),
+    @NamedQuery(name = "Conta.findByCFechada", query = "SELECT c FROM Conta c WHERE c.cFechada = :cFechada"),
     @NamedQuery(name = "Conta.findByCGerente", query = "SELECT c FROM Conta c WHERE c.cGerente = :cGerente")})
 public class Conta implements Serializable {
 
@@ -58,10 +59,15 @@ public class Conta implements Serializable {
     
     @Basic(optional = false)
     @NotNull
+    @Column(name = "c_fechada")
+    private boolean cFechada;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 30)
     @Column(name = "c_gerente")
     private String cGerente;
-    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cId")
+    private Collection<Produto> produtoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "conta")
     private Collection<UsuarioConta> usuarioContaCollection;
 
@@ -72,10 +78,11 @@ public class Conta implements Serializable {
         this.cId = cId;
     }
 
-    public Conta(Integer cId, String cNome, double cValor, String cGerente) {
+    public Conta(Integer cId, String cNome, double cValor, boolean cFechada, String cGerente) {
         this.cId = cId;
         this.cNome = cNome;
         this.cValor = cValor;
+        this.cFechada = cFechada;
         this.cGerente = cGerente;
     }
 
@@ -103,12 +110,29 @@ public class Conta implements Serializable {
         this.cValor = cValor;
     }
 
+    public boolean getCFechada() {
+        return cFechada;
+    }
+
+    public void setCFechada(boolean cFechada) {
+        this.cFechada = cFechada;
+    }
+
     public String getCGerente() {
         return cGerente;
     }
 
     public void setCGerente(String cGerente) {
         this.cGerente = cGerente;
+    }
+
+    @XmlTransient
+    public Collection<Produto> getProdutoCollection() {
+        return produtoCollection;
+    }
+
+    public void setProdutoCollection(Collection<Produto> produtoCollection) {
+        this.produtoCollection = produtoCollection;
     }
 
     @XmlTransient

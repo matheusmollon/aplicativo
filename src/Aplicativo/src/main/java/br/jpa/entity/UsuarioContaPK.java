@@ -28,7 +28,6 @@ public class UsuarioContaPK implements Serializable {
     @NotNull
     @Column(name = "c_id")
     private int cId;
-
     public UsuarioContaPK() {
     }
 
@@ -81,5 +80,4 @@ public class UsuarioContaPK implements Serializable {
     public String toString() {
         return "br.jpa.entity.UsuarioContaPK[ uNome=" + uNome + ", cId=" + cId + " ]";
     }
-    
 }
