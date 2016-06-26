@@ -4,86 +4,104 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Sistema de Divisão de Contas</title>
     </h:head>
     <h:body>
         <c:set var="usuario" value="#{usuarioBean.usuarioSession}" scope="request" />
-        
-        <h:form>
-            <h2>Bem-vindo ao Sistema de Divisão de Contas #{usuario.UNome}!</h2>
-            <h:panelGrid columns="3">      
-                <h:commandButton action="#{navigationBean.redirectAtualizacaoUsuario()}"
-                                 value="Atualizar dados de usuário" />            
+        <p:messages autoUpdate="true"/>
 
-                <h:commandButton action="#{navigationBean.redirectExclusaoUsuario()}"
-                                 value="Excluir conta do usuário" />            
+        <p:toolbar>  
+            <f:facet name="right">
+                <h:form>
+                    <p:commandButton action="#{loginBean.logout()}"
+                                     value="Sair" />           
+                </h:form>
+            </f:facet>
+        </p:toolbar>
 
-                <h:commandButton action="#{loginBean.logout()}"
-                                 value="Sair" />
-            </h:panelGrid>
-        </h:form>
 
-        <h:form>
-            <h3>Informações do usuário:</h3>
-            <h:panelGrid columns="2">
-                <h:outputLabel for="uname" 
-                               value="Nome de usuário: " />
-                <h:outputText id="uname" 
-                              value="#{usuario.UNome}" />
+        <h2>Bem-vindo ao Sistema de Divisão de Contas #{usuario.UNome}!</h2>
 
-                <h:outputLabel for="ucelular" 
-                               value="Número de celular: " />
-                <h:outputText id="ucelular" 
-                              value="#{usuario.UCelular}" />
-            </h:panelGrid>
-        </h:form>
+        <p:panel id="info_panel" header="Informações do usuário">
+            <br/>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel for="uname" 
+                                   value="Nome de usuário: " />
+                    <h:outputText id="uname" 
+                                  value="#{usuario.UNome}" />
 
-        <h:form>
-            <h3>Contas:</h3>
-            <h:panelGrid columns="3">
-                <h:outputLabel for="novaconta"
-                               value="Nova conta: " />
-                <h:inputText id="novaconta" 
-                             required="true" 
-                             value="#{contaBean.conta.CNome}" 
-                             requiredMessage="Informe um nome para conta" 
-                             validatorMessage="Nome da conta deve ter no máximo 30 caracteres."
-                             pt:placeholder="Ex.: Costela, Vincenzo...">
-                    <f:validateLength minimum="1" maximum="30" />
-                </h:inputText>
-                <h:commandButton action="#{contaBean.criarConta()}"
-                                 value="Criar" />
-            </h:panelGrid>
-            <h:messages errorStyle="color: red" 
-                        infoStyle="color: green" />
-            <hr />
-            <h:dataTable id="contas"
-                         value="#{usuario.usuarioContaCollection}"
-                         var="usuarioConta" >
-                <h:column>
-                    <f:facet name="header">Conta</f:facet>
-                    <h:outputText value="#{usuarioConta.conta.CNome}" />
-                </h:column>
+                    <h:outputLabel for="ucelular" 
+                                   value="Número de celular: " />
+                    <h:outputText id="ucelular" 
+                                  value="#{usuario.UCelular}" />
+                </h:panelGrid>
+                <br/>
+                <h:panelGrid columns="3"> 
 
-                <h:column>
-                    <f:facet name="header">Total</f:facet>
-                    <h:outputText value="#{usuarioConta.conta.CValor}" />
-                </h:column>
+                    <p:commandButton action="#{navigationBean.redirectAtualizacaoUsuario()}"
+                                     value="Atualizar dados de usuário" />            
 
-                <h:column>                    
-                    <f:facet name="header">Valor Pago</f:facet>
-                    <h:outputText value="#{usuarioConta.UCValor}" />
-                </h:column>
+                    <p:commandButton action="#{navigationBean.redirectExclusaoUsuario()}"
+                                     value="Excluir conta do usuário" />            
 
-                <h:column>
-                    <h:commandButton immediate="true"
-                                     action="#{usuarioContaBean.acessarConta(usuarioConta)}"
-                                     value="Acessar" />
-                </h:column>
-            </h:dataTable>
-        </h:form>
+                </h:panelGrid>
+            </h:form>
+        </p:panel>
+
+        <br/>
+
+        <p:panel id="contas_panel" header="Contas">
+             <br/>
+            <h:form>
+                <h:panelGrid columns="3">
+                    <p:outputLabel for="novaconta"
+                                   value="Nova conta: " />
+                    <p:inputText id="novaconta" 
+                                 required="true" 
+                                 value="#{contaBean.conta.CNome}" 
+                                 requiredMessage="Informe um nome para conta" 
+                                 validatorMessage="Nome da conta deve ter no máximo 30 caracteres."
+                                 pt:placeholder="Ex.: Costela, Vincenzo...">
+                        <f:validateLength minimum="1" maximum="30" />
+                    </p:inputText>
+                    <p:commandButton action="#{contaBean.criarConta()}"
+                                     value="Criar" />
+                </h:panelGrid>
+
+                <p:messages autoUpdate="true"/>
+                <br/>
+                <hr />
+                 <br/>
+                <p:dataTable id="contas"
+                             value="#{usuario.usuarioContaCollection}"
+                             var="usuarioConta" >
+                    <p:column>
+                        <f:facet name="header">Conta</f:facet>
+                        <h:outputText value="#{usuarioConta.conta.CNome}" />
+                    </p:column>
+
+                    <p:column>
+                        <f:facet name="header">Total</f:facet>
+                        <h:outputText value="#{usuarioConta.conta.CValor}" />
+                    </p:column>
+
+                    <p:column>                    
+                        <f:facet name="header">Valor Pago</f:facet>
+                        <h:outputText value="#{usuarioConta.UCValor}" />
+                    </p:column>
+
+                    <p:column>
+                        <p:commandButton immediate="true"
+                                         action="#{usuarioContaBean.acessarConta(usuarioConta)}"
+                                         value="Acessar" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </p:panel>
     </h:body>
 </html>
 
