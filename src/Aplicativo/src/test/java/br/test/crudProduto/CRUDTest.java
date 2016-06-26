@@ -63,7 +63,7 @@ public abstract class CRUDTest {
     
      public void deletarProduto(String produtoNome) {
         pjc = ProdutoJpaController.getInstance();
-        Conta conta = ContaJpaController.getInstance().findConta(100);
+        Conta conta = ContaJpaController.getInstance().findConta(id_conta);
         List<Produto> produtos = (List<Produto>) conta.getProdutoCollection();
         for (Produto p1 : produtos) {
             if (p1.getPNome().equals(produtoNome)) {
