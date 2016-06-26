@@ -53,10 +53,11 @@ public class UsuarioContaBean {
 
     public void acessarConta(UsuarioConta usuarioConta) {
         SessionContext.getInstance().setSessionAttribute("cId", usuarioConta.getUsuarioContaPK().getCId());
+        
         System.out.println(UsuarioContaJpaController.getInstance().findUsuarioConta(usuarioConta.getUsuarioContaPK()).getConta().getCFechada());
         if (UsuarioContaJpaController.getInstance().findUsuarioConta(usuarioConta.getUsuarioContaPK()).getConta().getCFechada() == true) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/conta_finalizada-1.xhtml");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/visualizar_conta.xhtml");
             } catch (IOException ex) {
                 System.out.println(ex.toString());
             }

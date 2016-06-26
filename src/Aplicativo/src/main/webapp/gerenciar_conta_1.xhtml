@@ -1,0 +1,221 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Gerenciar Conta</title>
+        <style type="text/css">
+            #info_box{
+                display: none;
+            }   
+
+        </style>
+    </h:head>
+    <h:body>  
+        <c:set var="conta" value="#{contaBean.contaSessionMenosGerente}" scope="request" />
+
+        <h:form>
+            <h:panelGrid columns="3">      
+                <h:commandButton action="#{navigationBean.redirectAtualizacaoConta()}" 
+                                 value="Atualizar conta" />            
+
+                <h:commandButton action="#{contaBean.excluirConta()}"
+                                 value="Excluir conta" />            
+
+                <h:commandButton action="#{navigationBean.redirectSistema()}"
+                                 value="Voltar ao sistema principal" />
+            </h:panelGrid>
+        </h:form>
+
+        <h:messages errorStyle="color: red" 
+                    infoStyle="color: green" />
+
+        <h:form>
+            <h3>Informações:</h3>
+            <h:panelGrid columns="2">                
+                <h:outputLabel for="cNome" 
+                               value="Nome da conta: " />
+                <h:outputText id="cNome" 
+                              value="#{conta.CNome}" />
+
+                <h:outputLabel for="cValor" 
+                               value="Valor total: " />
+                <h:outputText id="cValor" 
+                              value="#{conta.CValor}" />
+            </h:panelGrid>
+        </h:form>
+
+        <h:form>
+            <h3>Adicionar usuários:</h3>
+            <h:panelGrid columns="2">
+                <h:outputLabel for="nome"
+                               value="Buscar:" />
+                <h:inputText id="nome" 
+                             value="#{searchBean.UNome}" 
+                             autocomplete="off"
+                             pt:placeholder="Entre com um nome de usuário..." >
+                    <f:ajax event="keyup" render="resultTable" />
+                    <f:ajax event="keyup" render="resultOut" />
+                </h:inputText>
+            </h:panelGrid>  
+
+            <h:outputText id="resultOut"
+                          value="#{searchBean.searchNumbers()}" />
+
+            <h:dataTable id="resultTable"
+                         value="#{searchBean.searchResults()}"
+                         var="usuario" >
+                <h:column>
+                    <h:outputText value="#{usuario.UNome}" />
+                </h:column>
+
+                <h:column>
+                    <h:commandButton action="#{usuarioContaBean.cadastrarUsuarioConta(usuario.UNome)}" 
+                                     value="Adicionar" /> 
+                </h:column>
+            </h:dataTable>           
+        </h:form>
+
+        <h:form>
+            <h3>Gerenciar usuários:</h3>
+
+            <h:outputLabel for="cGerente"
+                           value="Gerente da conta: " />
+            <h:outputText id="cGerente"
+                          value="#{conta.CGerente}" />
+
+            <br />
+            <br />
+            <h:outputText value="Usuários gerenciáveis:" />
+
+            <h:dataTable value="#{conta.usuarioContaCollection}"
+                         var="usuarioConta" >
+                <h:column>
+                    <h:outputText value="#{usuarioConta.usuario.UNome}" />
+                </h:column>
+
+                <h:column>
+                    <h:commandButton action="#{usuarioContaBean.excluirUsuarioConta(usuarioConta)}"
+                                     value="Remover" />
+                </h:column>
+
+                <h:column>
+                    <h:commandButton action="#{contaBean.tornarGerente(usuarioConta)}"
+                                     value="Tornar Gerente" />
+                </h:column>
+            </h:dataTable> 
+        </h:form>
+        <h3>Produtos:</h3>
+        <div id="add_produto">
+            Adicionar Produto a lista.
+            <hr/>
+            <h:form id="add_form">
+                <h:outputLabel value="Produto:" style="float:left"/>
+                <h:inputText value="#{produtoBean.produto}" required="true"
+                             requiredMessage="Informe um nome para o produto" 
+                             validatorMessage="Nome da conta deve ter no máximo 30 caracteres."
+                             pt:placeholder="Ex.: Torre de Chopp, Refrigerante"
+                             id="produto_input"
+                             style="display: block; position:relative; left: 4px;">
+                    <f:validateLength minimum="1" maximum="30" />
+                </h:inputText>
+
+                <h:outputLabel value="Preço:" style="float:left"/>
+                <h:inputText value="#{produtoBean.preco}" required="true"
+                             requiredMessage="Informe um preço para conta" 
+                             validatorMessage="O valor deve estar no intervalo de 1 a 1000000."
+                             pt:placeholder="Ex.: 10.00"
+                             id="preco_input"
+                             style="display: block; position:relative; left: 18px;">
+                    <f:validateLongRange minimum="1" maximum="1000000" />
+                 
+                </h:inputText>
+                <h:outputLabel value="Usuários:" style="float:left"/>
+
+                <h:selectManyCheckbox  id="users_checkbox" value="#{produtoBean.selecionados}" required="true" style="margin-bottom: 9px;"
+                                       requiredMessage="Informe ao menos uma pessoa para insirir o item.">
+
+                    <f:selectItems value="#{produtoBean.todosUsuariosNaConta}" var="u"
+                                   itemLabel="#{u.UNome}" itemValue="#{u.UNome}" />
+
+                </h:selectManyCheckbox>
+                <h:commandButton value="Adicionar" action="#{produtoBean.adicionar()}" style="float: left; margin-right: 10px;">
+                </h:commandButton>
+
+            </h:form>
+            <h:form>
+                <h:commandButton value="Limpar" actionListener="#{produtoBean.clean()}">
+                </h:commandButton>
+            </h:form>
+            <h:messages errorStyle="color: red" 
+                        infoStyle="color: green" />
+
+            <hr></hr>
+        </div>
+        Lista de produtos
+
+        <h:form id="form-data">
+            <h:dataTable value="#{conta.produtoCollection}" var="p">
+                
+                <h:column>
+                    <f:facet name="header">Produto</f:facet>  
+                    <center> <h:outputText value ="#{p.PNome}"/></center>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Quantidade Usuários</f:facet>  
+                    <center> <h:outputText value ="#{p.getQtdUsersProduct(p.PId)}"/> </center>
+                </h:column> 
+                <h:column>
+                    <f:facet name="header">Preço</f:facet>  
+                    <center><h:outputText value ="#{p.PValor}"/></center>
+                </h:column>
+                <h:column>
+                    <h:commandButton value="Info" onclick="document.getElementById('info_box').style.display = 'block'" action="#{produtoBean.getUsers_por_produto(p.PId)}" immediate="true">
+                        <f:ajax execute="click" render="form_info" />
+                    </h:commandButton>
+                </h:column>
+                <h:column>
+                    <h:commandButton value="Editar" actionListener="#{produtoBean.loadData(p)}" immediate="true"/>
+                </h:column>
+                <h:column>
+                    <h:commandButton value="Deletar" actionListener="#{produtoBean.remove(p)}" immediate="true">
+
+                    </h:commandButton>
+                </h:column>
+            </h:dataTable>
+            <hr/>
+            <h:outputLabel value="Taxa de serviço:" for="input_service" style="float:left;"/>
+            <h:inputText value="#{produtoBean.taxaServico}" required="true" size="10"
+                             requiredMessage="Informe a porcentagem" 
+                             validatorMessage="O valor deve estar no intervalo de 1 a 100."
+                             pt:placeholder="Ex.: 10(apenas números)"
+                             id="preco_input"
+                             style="display: inline-block; position:relative; left:5px;">
+                    <f:validateLongRange minimum="1" maximum="100" />             
+                </h:inputText>
+            <h:commandButton value="Fechar Conta" actionListener="#{produtoBean.fecharConta()}"/>
+        </h:form> 
+
+        <div id="info_box">
+            <h:form id="form_info">
+
+                Detalhes:
+                <h:dataTable value="#{produtoBean.users_por_produto}" var="u1">
+                    <h:column>
+                        <f:facet name="header">Usuários:</f:facet>  
+                        <center> <h:outputText value ="#{u1.UNome}"/></center>
+                    </h:column> 
+                </h:dataTable>
+                <h:commandButton value ="Fechar" onclick="document.getElementById('info_box').style.display = 'none';"  actionListener="#{produtoBean.limparDetalhes}">
+                    <f:ajax execute="click" render="info_box" />
+                </h:commandButton>
+            </h:form>
+        </div>
+
+    </h:body>
+</html>
+

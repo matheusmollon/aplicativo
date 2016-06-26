@@ -40,16 +40,19 @@ public class VisualizarContaFilter implements Filter {
         } else if (session.getAttribute("uNome") != null && session.getAttribute("cId") == null) {
             ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/faces/sistema.xhtml");
         } else if (session.getAttribute("cId") != null && session.getAttribute("uNome") != null) {
+ 
             String uNome = session.getAttribute("uNome").toString();
             int cId = (int) session.getAttribute("cId");
             UsuarioContaPK usuarioContaPK = new UsuarioContaPK(uNome, cId);
             UsuarioConta uc = UsuarioContaJpaController.getInstance().findUsuarioConta(usuarioContaPK);
-
-            if (!uc.getConta().getCGerente().equals(uNome)) {
-                chain.doFilter(request, response);
-            } else {
-                ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/faces/sistema.xhtml");
-            }
+            
+            chain.doFilter(request, response);
+//            if (!uc.getConta().getCGerente().equals(uNome)) {
+//                chain.doFilter(request, response);
+//            } else {
+//                
+//                ((HttpServletResponse) response).sendRedirect(((HttpServletRequest) request).getContextPath() + "/faces/sistema.xhtml");
+//            }
         }
     }
 

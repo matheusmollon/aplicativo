@@ -7,215 +7,222 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Gerenciar Conta</title>
-        <style type="text/css">
-            #info_box{
-                display: none;
-            }   
-
-        </style>
+        <title>Gerenciar Conta</title> 
     </h:head>
     <h:body>  
-        <c:set var="conta" value="#{contaBean.contaSessionMenosGerente}" scope="request" />
+        <c:set var="conta" value="#{contaBean.contaSession}" scope="request" />
 
-        <h:form>
-            <h:panelGrid columns="3">      
-                <h:commandButton action="#{navigationBean.redirectAtualizacaoConta()}" 
-                                 value="Atualizar conta" />            
+        <p:messages autoUpdate="true"/>
 
-                <h:commandButton action="#{contaBean.excluirConta()}"
-                                 value="Excluir conta" />            
+        <p:toolbar>  
+            <f:facet name="left">
+                <h:form>
 
-                <h:commandButton action="#{navigationBean.redirectSistema()}"
-                                 value="Voltar ao sistema principal" />
-            </h:panelGrid>
-        </h:form>
+                    <p:commandButton action="#{navigationBean.redirectAtualizacaoConta()}" 
+                                     value="Atualizar conta" />            
 
-        <h:messages errorStyle="color: red" 
-                    infoStyle="color: green" />
+                    <p:commandButton action="#{contaBean.excluirConta()}"
+                                     value="Excluir conta" />            
+                </h:form>
+            </f:facet>
 
-        <h:form>
-            <h3>Informações:</h3>
-            <h:panelGrid columns="2">                
-                <h:outputLabel for="cNome" 
-                               value="Nome da conta: " />
-                <h:outputText id="cNome" 
-                              value="#{conta.CNome}" />
+            <f:facet name="right">
+                <h:form>
+                    <p:commandButton action="#{navigationBean.redirectSistema()}"
+                                     value="Voltar ao sistema principal" />                     
+                </h:form>               
+            </f:facet>
+        </p:toolbar>
 
-                <h:outputLabel for="cValor" 
-                               value="Valor total: " />
-                <h:outputText id="cValor" 
-                              value="#{conta.CValor}" />
-            </h:panelGrid>
-        </h:form>
+        <br />
 
-        <h:form>
-            <h3>Adicionar usuários:</h3>
-            <h:panelGrid columns="2">
-                <h:outputLabel for="nome"
-                               value="Buscar:" />
-                <h:inputText id="nome" 
-                             value="#{searchBean.UNome}" 
-                             autocomplete="off"
-                             pt:placeholder="Entre com um nome de usuário..." >
-                    <f:ajax event="keyup" render="resultTable" />
-                    <f:ajax event="keyup" render="resultOut" />
-                </h:inputText>
-            </h:panelGrid>  
+        <p:tabView id="tabView">
+            <p:tab title="Informações">
+                <h:form>
+                    <h:panelGrid columns="2">                
+                        <p:outputLabel for="cNome" 
+                                       value="Nome da conta: " />
+                        <h:outputText id="cNome" 
+                                      value="#{conta.CNome}" />
 
-            <h:outputText id="resultOut"
-                          value="#{searchBean.searchNumbers()}" />
+                        <p:outputLabel for="cValor" 
+                                       value="Valor total: " />
+                        <h:outputText id="cValor" 
+                                      value="#{conta.CValor}" />
+                    </h:panelGrid>
+                </h:form>
+            </p:tab>
 
-            <h:dataTable id="resultTable"
-                         value="#{searchBean.searchResults()}"
-                         var="usuario" >
-                <h:column>
-                    <h:outputText value="#{usuario.UNome}" />
-                </h:column>
+            <p:tab title="Adicionar usuários">
+                <h:form>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="nome"
+                                       value="Buscar:" />
+                        <p:inputText id="nome" 
+                                     value="#{searchBean.UNome}"
+                                     pt:placeholder="Informe um nome de usuário..."
+                                     autocomplete="off">
+                            <f:ajax event="keyup" render="resultTable" />
+                            <f:ajax event="keyup" render="resultOut" />
+                        </p:inputText>
+                    </h:panelGrid>
 
-                <h:column>
-                    <h:commandButton action="#{usuarioContaBean.cadastrarUsuarioConta(usuario.UNome)}" 
-                                     value="Adicionar" /> 
-                </h:column>
-            </h:dataTable>           
-        </h:form>
+                    <p:dataTable id="resultTable"
+                                 value="#{searchBean.searchResults()}"
+                                 var="usuario"
+                                 emptyMessage="Nenhum resultado encontrado.">
+                        <p:column headerText="Nome de usuário">
+                            <h:outputText value="#{usuario.UNome}" />
+                        </p:column>
 
-        <h:form>
-            <h3>Gerenciar usuários:</h3>
+                        <p:column>
+                            <p:commandButton action="#{usuarioContaBean.cadastrarUsuarioConta(usuario.UNome)}" 
+                                             update=":panelGerenciar, :tabView:add_form"
+                                             value="Adicionar" /> 
+                        </p:column>
+                    </p:dataTable>           
+                </h:form>
+            </p:tab>
 
-            <h:outputLabel for="cGerente"
-                           value="Gerente da conta: " />
-            <h:outputText id="cGerente"
-                          value="#{conta.CGerente}" />
+            <p:tab title="Adicionar produtos">
+                <h:form id="add_form">
+                    <h:panelGrid columns="1">
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Produto:" 
+                                           style="float:left"/>
+                            <p:inputText value="#{produtoBean.produto}" 
+                                         required="true"
+                                         requiredMessage="Informe um nome para o produto" 
+                                         validatorMessage="Nome da conta deve ter no máximo 30 caracteres."
+                                         pt:placeholder="Ex.: Torre de Chopp, Refrigerante"
+                                         id="produto_input">
+                                <f:validateLength minimum="1" maximum="30" />
+                            </p:inputText>
 
-            <br />
-            <br />
-            <h:outputText value="Usuários gerenciáveis:" />
+                            <p:outputLabel value="Preço:" 
+                                           style="float:left"/>
+                            <p:inputText value="#{produtoBean.preco}" 
+                                         required="true"
+                                         requiredMessage="Informe um preço para conta" 
+                                         validatorMessage="O valor deve estar no intervalo de 1 a 1000000."
+                                         pt:placeholder="Ex.: 10.00"
+                                         id="preco_input">
+                                <f:validateLongRange minimum="1" maximum="1000000" />
+                            </p:inputText>
 
-            <h:dataTable value="#{conta.usuarioContaCollection}"
-                         var="usuarioConta" >
-                <h:column>
-                    <h:outputText value="#{usuarioConta.usuario.UNome}" />
-                </h:column>
+                            <p:outputLabel value="Usuários:" 
+                                           style="float:left"/>
+                            <p:selectCheckboxMenu id="users_checkbox"
+                                                  label="usuários"
+                                                  value="#{produtoBean.selecionados}" 
+                                                  required="true" 
+                                                  requiredMessage="Informe ao menos uma pessoa para insirir o item.">
+                                <f:selectItems value="#{produtoBean.todosUsuariosNaConta}" 
+                                               var="u"
+                                               itemLabel="#{u.UNome}" 
+                                               itemValue="#{u.UNome}" />
+                            </p:selectCheckboxMenu>
+                        </h:panelGrid>
 
-                <h:column>
-                    <h:commandButton action="#{usuarioContaBean.excluirUsuarioConta(usuarioConta)}"
-                                     value="Remover" />
-                </h:column>
+                        <h:panelGrid columns="2" style="float: right">
+                            <p:commandButton value="Adicionar" 
+                                             update=":panelProdutos"
+                                             action="#{produtoBean.adicionar()}" />
 
-                <h:column>
-                    <h:commandButton action="#{contaBean.tornarGerente(usuarioConta)}"
-                                     value="Tornar Gerente" />
-                </h:column>
-            </h:dataTable> 
-        </h:form>
-        <h3>Produtos:</h3>
-        <div id="add_produto">
-            Adicionar Produto a lista.
-            <hr/>
-            <h:form id="add_form">
-                <h:outputLabel value="Produto:" style="float:left"/>
-                <h:inputText value="#{produtoBean.produto}" required="true"
-                             requiredMessage="Informe um nome para o produto" 
-                             validatorMessage="Nome da conta deve ter no máximo 30 caracteres."
-                             pt:placeholder="Ex.: Torre de Chopp, Refrigerante"
-                             id="produto_input"
-                             style="display: block; position:relative; left: 4px;">
-                    <f:validateLength minimum="1" maximum="30" />
-                </h:inputText>
+                            <p:commandButton value="Limpar" 
+                                             actionListener="#{produtoBean.clean()}" />
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </h:form>
+            </p:tab>
+        </p:tabView>
 
-                <h:outputLabel value="Preço:" style="float:left"/>
-                <h:inputText value="#{produtoBean.preco}" required="true"
-                             requiredMessage="Informe um preço para conta" 
-                             validatorMessage="O valor deve estar no intervalo de 1 a 1000000."
-                             pt:placeholder="Ex.: 10.00"
-                             id="preco_input"
-                             style="display: block; position:relative; left: 18px;">
-                    <f:validateLongRange minimum="1" maximum="1000000" />
-                 
-                </h:inputText>
-                <h:outputLabel value="Usuários:" style="float:left"/>
+        <br />
 
-                <h:selectManyCheckbox  id="users_checkbox" value="#{produtoBean.selecionados}" required="true" style="margin-bottom: 9px;"
-                                       requiredMessage="Informe ao menos uma pessoa para insirir o item.">
-
-                    <f:selectItems value="#{produtoBean.todosUsuariosNaConta}" var="u"
-                                   itemLabel="#{u.UNome}" itemValue="#{u.UNome}" />
-
-                </h:selectManyCheckbox>
-                <h:commandButton value="Adicionar" action="#{produtoBean.adicionar()}" style="float: left; margin-right: 10px;">
-                </h:commandButton>
-
-            </h:form>
+        <p:panel id="panelGerenciar"
+                 header="Gerenciar usuários">
             <h:form>
-                <h:commandButton value="Limpar" actionListener="#{produtoBean.clean()}">
-                </h:commandButton>
+                <p:dataTable value="#{conta.usuarioContaCollection}"
+                             var="usuarioConta">
+                    <p:column headerText="Nome de usuário">
+                        <h:outputText value="#{usuarioConta.usuario.UNome}" />
+                    </p:column>
+
+                    <p:column headerText="Valor individual">
+                        <h:outputText value="#{usuarioConta.UCValor}" />
+                    </p:column>
+
+                    <p:column>
+                        <p:commandButton action="#{usuarioContaBean.excluirUsuarioConta(usuarioConta)}"
+                                         update=":panelGerenciar, :tabView:add_form"
+                                         rendered="#{contaBean.renderButton(usuarioConta)}"
+                                         value="Remover" />
+                    </p:column>
+
+                    <p:column>
+                        <p:commandButton action="#{contaBean.tornarGerente(usuarioConta)}"
+                                         rendered="#{contaBean.renderButton(usuarioConta)}"
+                                         value="Tornar Gerente" />
+                    </p:column>
+                </p:dataTable> 
             </h:form>
-            <h:messages errorStyle="color: red" 
-                        infoStyle="color: green" />
+        </p:panel>
 
-            <hr></hr>
-        </div>
-        Lista de produtos
+        <br />
 
-        <h:form id="form-data">
-            <h:dataTable value="#{conta.produtoCollection}" var="p">
-                
-                <h:column>
-                    <f:facet name="header">Produto</f:facet>  
-                    <center> <h:outputText value ="#{p.PNome}"/></center>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Quantidade Usuários</f:facet>  
-                    <center> <h:outputText value ="#{p.getQtdUsersProduct(p.PId)}"/> </center>
-                </h:column> 
-                <h:column>
-                    <f:facet name="header">Preço</f:facet>  
-                    <center><h:outputText value ="#{p.PValor}"/></center>
-                </h:column>
-                <h:column>
-                    <h:commandButton value="Info" onclick="document.getElementById('info_box').style.display = 'block'" action="#{produtoBean.getUsers_por_produto(p.PId)}" immediate="true">
-                        <f:ajax execute="click" render="form_info" />
-                    </h:commandButton>
-                </h:column>
-                <h:column>
-                    <h:commandButton value="Editar" actionListener="#{produtoBean.loadData(p)}" immediate="true"/>
-                </h:column>
-                <h:column>
-                    <h:commandButton value="Deletar" actionListener="#{produtoBean.remove(p)}" immediate="true">
+        <p:panel id="panelProdutos"
+                 header="Produtos">
+            <h:form id="form-data">
+                <p:dataTable value="#{conta.produtoCollection}" var="p">
+                    <p:column headerText="Produto"> 
+                        <h:outputText value="#{p.PNome}"/>
+                    </p:column>
 
-                    </h:commandButton>
-                </h:column>
-            </h:dataTable>
-            <hr/>
-            <h:outputLabel value="Taxa de serviço:" for="input_service" style="float:left;"/>
-            <h:inputText value="#{produtoBean.taxaServico}" required="true" size="10"
+                    <p:column headerText="Quantidade de usuários"> 
+                        <h:outputText value ="#{p.getQtdUsersProduct(p.PId)}" />
+                    </p:column> 
+
+                    <p:column headerText="Preço"> 
+                        <h:outputText value="#{p.PValor}" />
+                    </p:column>
+
+                    <p:column headerText="Detalhes">                       
+                        <p:rowToggler />
+                    </p:column>
+
+                    <p:column>
+                        <p:commandButton value="Editar" 
+                                         actionListener="#{produtoBean.loadData(p)}" immediate="true"/>
+                    </p:column>
+
+                    <p:column>
+                        <p:commandButton value="Deletar" 
+                                         update=":panelProdutos"
+                                         actionListener="#{produtoBean.remove(p)}" immediate="true" />
+                    </p:column>
+
+                    <p:rowExpansion>
+                        <p:dataTable value="#{p.usuarioCollection}"
+                                     var="u1">
+                            <p:column headerText="Usuarios">
+                                <h:outputText value ="#{u1.UNome}"/>
+                            </p:column> 
+                        </p:dataTable>
+                    </p:rowExpansion>
+                </p:dataTable>
+                <br/>
+                <h:outputLabel value="Taxa de serviço:" for="input_service"/>
+                <p:inputText value="#{produtoBean.taxaServico}" required="true" size="10"
                              requiredMessage="Informe a porcentagem" 
                              validatorMessage="O valor deve estar no intervalo de 1 a 100."
                              pt:placeholder="Ex.: 10(apenas números)"
                              id="preco_input"
-                             style="display: inline-block; position:relative; left:5px;">
+                             style="margin-left: 5px; margin-right: 5px;">
                     <f:validateLongRange minimum="1" maximum="100" />             
-                </h:inputText>
-            <h:commandButton value="Fechar Conta" actionListener="#{produtoBean.fecharConta()}"/>
-        </h:form> 
-
-        <div id="info_box">
-            <h:form id="form_info">
-
-                Detalhes:
-                <h:dataTable value="#{produtoBean.users_por_produto}" var="u1">
-                    <h:column>
-                        <f:facet name="header">Usuários:</f:facet>  
-                        <center> <h:outputText value ="#{u1.UNome}"/></center>
-                    </h:column> 
-                </h:dataTable>
-                <h:commandButton value ="Fechar" onclick="document.getElementById('info_box').style.display = 'none';"  actionListener="#{produtoBean.limparDetalhes}">
-                    <f:ajax execute="click" render="info_box" />
-                </h:commandButton>
-            </h:form>
-        </div>
-
+                </p:inputText>
+                <p:commandButton value="Fechar Conta" actionListener="#{produtoBean.fecharConta()}"/>
+            </h:form> 
+        </p:panel>
     </h:body>
 </html>
 

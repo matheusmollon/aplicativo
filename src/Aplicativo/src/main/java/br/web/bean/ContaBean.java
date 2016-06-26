@@ -128,6 +128,19 @@ public class ContaBean {
         }
     }
 
+    public Conta getContaSession() {
+        return ContaJpaController.getInstance().findConta((int) SessionContext.getInstance().getSessionAttribute("cId"));
+    }
+
+    public boolean renderButton(UsuarioConta usuarioConta) {
+
+        if (usuarioConta.getConta().getCGerente().equals(usuarioConta.getUsuarioContaPK().getUNome())) {
+            return false;
+        }
+
+        return true;
+    }
+
     public void tornarGerente(UsuarioConta usuarioConta) {
         Conta contaNovoGerente = ContaJpaController.getInstance().findConta((int) SessionContext.getInstance().getSessionAttribute("cId"));
         contaNovoGerente.setCGerente(usuarioConta.getUsuarioContaPK().getUNome());

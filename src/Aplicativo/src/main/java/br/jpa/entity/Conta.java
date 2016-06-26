@@ -45,18 +45,18 @@ public class Conta implements Serializable {
     @Basic(optional = false)
     @Column(name = "c_id")
     private Integer cId;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 30)
     @Column(name = "c_nome")
     private String cNome;
-    
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "c_valor")
     private double cValor;
-    
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "c_fechada")
@@ -122,6 +122,14 @@ public class Conta implements Serializable {
         return cGerente;
     }
 
+    public String getStatus() {
+        if (cFechada) {
+            return "Encerrada";
+        } else {
+            return "Ativa";
+        }
+    }
+
     public void setCGerente(String cGerente) {
         this.cGerente = cGerente;
     }
@@ -168,5 +176,5 @@ public class Conta implements Serializable {
     public String toString() {
         return "br.jpa.entity.Conta[ cId=" + cId + " ]";
     }
-    
+
 }

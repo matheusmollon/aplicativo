@@ -3,101 +3,105 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Visualizar Conta</title>
-        <style type="text/css">
-            #info_box{
-                display: none;
-            }   
-
-        </style>
     </h:head>
     <h:body>  
-        <c:set var="conta" value="#{contaBean.contaSessionMenosGerente}" scope="request" />
+        <c:set var="conta" value="#{contaBean.contaSession}" scope="request" />
 
-        <h:form>
-            <h:panelGrid columns="1">      
-                <h:commandButton action="#{navigationBean.redirectSistema()}"
-                                 value="Voltar ao sistema principal" />
-            </h:panelGrid>
-        </h:form>
+        <p:messages autoUpdate="true"/>
 
-        <h:form>
-            <h3>Informações:</h3>
-            <h:panelGrid columns="2">                
-                <h:outputLabel for="cNome" 
-                               value="Nome da conta:" />
-                <h:outputText id="cNome" 
-                              value="#{conta.CNome}" />
+        <p:toolbar>
+            <f:facet name="right">
+                <h:form>
+                    <p:commandButton action="#{navigationBean.redirectSistema()}"
+                                     value="Voltar ao sistema principal" />                     
+                </h:form>               
+            </f:facet>
+        </p:toolbar>
 
-                <h:outputLabel for="cValor" 
-                               value="Valor total:" />
-                <h:outputText id="cValor" 
-                              value="#{conta.CValor}" />
-            </h:panelGrid>
-        </h:form>
+        <br />
 
-        <h:form>
-            <h3>Usuários:</h3>
+        <p:panel id ="panelInfo" header="Informações">
+            <h:form>
+                <h:panelGrid columns="2">                
+                    <p:outputLabel for="cNome" 
+                                   value="Nome da conta: " />
+                    <h:outputText id="cNome" 
+                                  value="#{conta.CNome}" />
 
-            <h:outputLabel for="cGerente"
-                           value="Gerente da conta: " />
-            <h:outputText id="cGerente"
-                          value="#{conta.CGerente}" />
+                    <p:outputLabel for="cValor" 
+                                   value="Valor total: " />
+                    <h:outputText id="cValor" 
+                                  value="#{conta.CValor}" />
+                    
+                     <p:outputLabel for="cFechada" 
+                                   value="Status: " />
+                    <h:outputText id="cFechada" 
+                                  value="#{conta.status}" />
 
-            <br />
-            <br />
-            <h:outputText value="Usuários gerenciáveis:" />
-            <h:dataTable value="#{conta.usuarioContaCollection}"
-                         var="usuarioConta" >
-                <h:column>
-                    <h:outputText value="#{usuarioConta.usuario.UNome}" />
-                </h:column>
-            </h:dataTable> 
-        </h:form>
-
-        <h:form>
-            <h3>Produtos:</h3>
-
-            <h:dataTable value="#{conta.produtoCollection}" var="p">
-
-                <h:column>
-                    <f:facet name="header">Produto</f:facet>  
-                    <center> <h:outputText value ="#{p.PNome}"/></center>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Quantidade Usuários</f:facet>  
-                    <center> <h:outputText value ="#{p.getQtdUsersProduct(p.PId)}"/> </center>
-                </h:column> 
-                <h:column>
-                    <f:facet name="header">Preço</f:facet>  
-                    <center><h:outputText value ="#{p.PValor}"/></center>
-                </h:column>
-                <h:column>
-                    <h:commandButton value="Info" onclick="document.getElementById('info_box').style.display = 'block'" action="#{produtoBean.getUsers_por_produto(p.PId)}">
-                        <f:ajax execute="click" render="form_info" />
-                    </h:commandButton>
-                </h:column>
-            </h:dataTable>
-        </h:form>
-
-        <div id="info_box">
-            <h:form id="form_info">
-
-                Detalhes:
-                <h:dataTable value="#{produtoBean.users_por_produto}" var="u1">
-                    <h:column>
-                        <f:facet name="header">Usuários:</f:facet>  
-                        <center> <h:outputText value ="#{u1.UNome}"/></center>
-                    </h:column> 
-                </h:dataTable>
-                <h:commandButton value ="Fechar" onclick="document.getElementById('info_box').style.display = 'none';"  actionListener="#{produtoBean.limparDetalhes}">
-                    <f:ajax execute="click" render="info_box" />
-                </h:commandButton>
+                </h:panelGrid>
             </h:form>
-        </div>
 
+        </p:panel>
+
+        <br/>
+        <p:panel id="info_users" header="Usuários na conta">
+            <h:form>
+
+                <p:outputLabel for="cGerente"
+                               value="Gerente da conta: " />
+                <h:outputText id="cGerente"
+                              value="#{conta.CGerente}" />
+
+                <br />
+
+                <p:dataTable value="#{conta.usuarioContaCollection}"
+                             var="usuarioConta" >
+                    <p:column headerText="Usuário">
+                        <h:outputText value="#{usuarioConta.usuario.UNome}" />
+                    </p:column>
+                    <p:column headerText="Valor individual">
+                        <h:outputText value="#{usuarioConta.UCValor}" />
+                    </p:column>
+                </p:dataTable> 
+            </h:form>
+        </p:panel>
+
+        <br/>
+
+        <p:panel id="panelProdutos"
+                 header="Produtos">
+            <h:form id="form-data">
+                <p:dataTable value="#{conta.produtoCollection}" var="p">
+                    <p:column headerText="Produto"> 
+                        <h:outputText value="#{p.PNome}"/>
+                    </p:column>
+
+                    <p:column headerText="Quantidade de usuários"> 
+                        <h:outputText value ="#{p.getQtdUsersProduct(p.PId)}" />
+                    </p:column> 
+
+                    <p:column headerText="Preço"> 
+                        <h:outputText value="#{p.PValor}" />
+                    </p:column>
+
+                    <p:column headerText="Detalhes">                       
+                        <p:rowToggler />
+                    </p:column>
+                    <p:rowExpansion>
+                        <p:dataTable value="#{p.usuarioCollection}"
+                                     var="u1">
+                            <p:column headerText="Usuarios">
+                                <h:outputText value ="#{u1.UNome}"/>
+                            </p:column> 
+                        </p:dataTable>
+                    </p:rowExpansion>
+                </p:dataTable>
+            </h:form> 
+        </p:panel>
     </h:body>
 </html>
 
