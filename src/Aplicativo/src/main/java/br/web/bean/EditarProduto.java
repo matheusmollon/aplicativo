@@ -66,7 +66,7 @@ public class EditarProduto {
         Produto p = new Produto();
         p.setPId(this.produto.getPId());
         p.setPNome(this.produto.getPNome());
-        p.setPValor(formatar(this.produto.getPValor()));
+        p.setPValor(this.produto.getPValor());
         p.setCId(this.produto.getCId());
         p.setUsuarioCollection(CacheProduto.getInstance().getUsers());
         p.setCId(recuperarConta());
@@ -144,15 +144,6 @@ public class EditarProduto {
     private Conta recuperarConta() {
         Conta contaSession = ContaJpaController.getInstance().findConta((int) SessionContext.getInstance().getSessionAttribute("cId"));
         return contaSession;
-    }
-
-    public double formatar(double valor) {
-        DecimalFormat fmt = new DecimalFormat("#.##");
-        String stringFormatada = fmt.format(valor);
-        String[] partes = stringFormatada.split(",");
-        String stringFormatacao = partes[0] + "." + partes[1];
-        return Double.parseDouble(stringFormatacao);
-
     }
 
 }

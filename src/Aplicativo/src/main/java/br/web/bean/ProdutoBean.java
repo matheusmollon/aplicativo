@@ -8,13 +8,11 @@ package br.web.bean;
 import br.jpa.calculos.CalculosFuncionais;
 import br.jpa.controller.ContaJpaController;
 import br.jpa.controller.ProdutoJpaController;
-import br.jpa.controller.UsuarioContaJpaController;
 import br.jpa.controller.UsuarioJpaController;
 import br.jpa.controller.exceptions.NonexistentEntityException;
 import br.jpa.entity.Conta;
 import br.jpa.entity.Produto;
 import br.jpa.entity.Usuario;
-import br.jpa.entity.UsuarioConta;
 import br.web.utils.SessionContext;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -22,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -42,7 +41,7 @@ public class ProdutoBean {
     private List<Usuario> users_por_produto;
 
     public ProdutoBean() {
-        this.selecionados = new String[ProdutoJpaController.getInstance().findProdutoEntities().size()];
+        this.selecionados = new String[UsuarioJpaController.getInstance().findUsuarioEntities().size()];
         this.users_por_produto = new ArrayList<>();
 
     }
@@ -63,15 +62,6 @@ public class ProdutoBean {
         this.selecionados = selecionados;
     }
 
-    public double formatar(double valor) {
-        DecimalFormat fmt = new DecimalFormat("#.##");
-        String stringFormatada = fmt.format(valor);
-        String[] partes = stringFormatada.split(",");
-        String stringFormatacao = partes[0] + "." + partes[1];
-        return Double.parseDouble(stringFormatacao);
-
-    }
-
     public void adicionar() {
         ProdutoJpaController pjc = ProdutoJpaController.getInstance();
         UsuarioJpaController ujc = UsuarioJpaController.getInstance();
@@ -83,22 +73,33 @@ public class ProdutoBean {
         }
 
         Produto p = new Produto();
-        p.setPId(pjc.findProdutoEntities().size() + 1);
+        //p.setPId(pjc.findProdutoEntities().size() + 1);
         p.setPNome(produto);
-        p.setPValor(formatar(preco));
+        p.setPValor(preco);
         p.setCId(recuperarConta());
         for (Usuario u : users) {
             System.out.println(u.toString());
         }
         p.setUsuarioCollection(users);
-        pjc.create(p);
+        boolean resposta = pjc.create(p);
+        if (resposta) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Produto armazenado com sucesso", ""));
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Produto não armazenado", ""));
+        }
         System.out.println("done");
         clean();
     }
 
     public void remove(Produto produto) {
         try {
-            ProdutoJpaController.getInstance().destroy(produto.getPId());
+            ProdutoJpaController pjc = ProdutoJpaController.getInstance();
+            boolean resposta = pjc.destroy(produto.getPId());
+            if (resposta) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Produto removido com sucesso", ""));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Produto não foi removido", ""));
+            }
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(ProdutoBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -106,7 +107,7 @@ public class ProdutoBean {
     }
 
     public void clean() {
-        System.out.println("Entrei ou");
+
         this.id = -1;
         this.produto = "";
         this.preco = 0.0;

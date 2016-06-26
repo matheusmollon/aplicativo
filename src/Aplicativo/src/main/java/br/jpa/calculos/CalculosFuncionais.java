@@ -119,8 +119,9 @@ public class CalculosFuncionais {
     }
 
     public double formatar(double valor) {
-        DecimalFormat fmt = new DecimalFormat("#.##");
+        DecimalFormat fmt = new DecimalFormat("0.00");
         String stringFormatada = fmt.format(valor);
+        System.out.println(stringFormatada);
         String[] partes = stringFormatada.split(",");
         String stringFormatacao = partes[0] + "." + partes[1];
         return Double.parseDouble(stringFormatacao);

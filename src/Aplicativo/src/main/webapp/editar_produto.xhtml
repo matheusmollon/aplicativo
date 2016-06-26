@@ -17,58 +17,68 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
     <body>
+        <p:messages autoUpdate="true"/>
+        <p:panel id="edit" header="Editar Produto"> 
 
-        <h:form id="editar_campos">
-            Editar produto #{editarProduto.obterDados()}:  
-            <h:inputHidden value ="#{editarProduto.produto.PId}"/>
-            Produto:
-            <h:inputText value="#{editarProduto.produto.PNome}" required="true"
-                         requiredMessage="Informe um nome para o produto" 
-                         validatorMessage="Nome da conta deve ter no máximo 30 caracteres."
-                         pt:placeholder="Ex.: Torre de Chopp, Refrigerante">
-                <f:validateLength minimum="1" maximum="30" />
-            </h:inputText>
-            Preço:
-            <h:inputText value="#{editarProduto.produto.PValor}" required="true"
-                         requiredMessage="Informe um preço para conta" 
-                         validatorMessage="O valor deve estar no intervalo de 1 a 1000000."
-                         pt:placeholder="Ex.: 10.00">
-                <f:validateLongRange minimum="1" maximum="1000000" />
-            </h:inputText>
-            <h:commandButton value="Salvar" action="#{editarProduto.edit()}"/>
-            <h:commandButton value="Cancelar" action="#{editarProduto.cancelar()}"/>
-        </h:form>
+            <h:form id="editar_campos">
+                <h:panelGrid columns="2">
+                    #{editarProduto.obterDados()}  
+                    <h:inputHidden value ="#{editarProduto.produto.PId}"/>
+                    <p:outputLabel value="Produto:" 
+                                   style="float:left"/>
+                    <p:inputText value="#{editarProduto.produto.PNome}" required="true"
+                                 requiredMessage="Informe um nome para o produto" 
+                                 validatorMessage="Nome da conta deve ter no máximo 30 caracteres."
+                                 pt:placeholder="Ex.: Torre de Chopp, Refrigerante">
+                        <f:validateLength minimum="1" maximum="30" />
+                    </p:inputText>
+                    <p:outputLabel value="Preço:" 
+                                   style="float:left"/>
+                    <p:inputText value="#{editarProduto.produto.PValor}" required="true"
+                                 requiredMessage="Informe um preço para conta" 
+                                 validatorMessage="O valor deve estar no intervalo de 1 a 1000000."
+                                 pt:placeholder="Ex.: 10.00">
+                        <f:validateLongRange minimum="1" maximum="1000000" />
+                    </p:inputText>
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Salvar" action="#{editarProduto.edit()}"/>
+                    <p:commandButton value="Cancelar" action="#{editarProduto.cancelar()}"/>
+                </h:panelGrid>
+            </h:form>
+        </p:panel>
+        <br/>
+        <p:panel id="edit_panel" header="Usuários">
+            <h:form id="form_users_list">
 
-        <h:form id="form_users_list">
-            <h:messages id="msgs" errorStyle="color: red" 
-                        infoStyle="color: green" />
-            Usuários:
-            <h:dataTable id="table" value="#{editarProduto.prod_users}" var="pro">
-                <h:column>
-                    <f:facet name="header">Produto</f:facet>  
-                    <center> <h:outputText value ="#{pro.UNome}"/></center>
-                </h:column>
-                <h:column>
-                    <h:commandButton value="Remover" action="#{editarProduto.removerUsuario(pro)}">
-                        <f:ajax execute="click" render="form_users_list"/>
-                    </h:commandButton> 
-                </h:column>
-            </h:dataTable>
-            <hr/>
 
-            <h3>Adicionar usuários:</h3>
+                <p:dataTable id="table" value="#{editarProduto.prod_users}" var="pro">
+                    <p:column>
+                        <f:facet name="header">Produto</f:facet>  
+                        <center> <h:outputText value ="#{pro.UNome}"/></center>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton value="Remover" action="#{editarProduto.removerUsuario(pro)}" update=":edit_panel">
+                            <f:ajax execute="click" render="form_users_list"/>
+                        </p:commandButton> 
+                    </p:column>
+                </p:dataTable>
+                <hr/>
 
-            <h:dataTable id="table_add" value="#{editarProduto.adicaoUsuario()}" var="usuario" >
-                <h:column>
-                    <h:outputText value="#{usuario.UNome}" />
-                </h:column>
+                <h3>Adicionar usuários:</h3>
 
-                <h:column>
-                    <h:commandButton value="Adicionar" actionListener="#{editarProduto.adicionarUsuario(usuario)}" >
-                        <f:ajax execute="click" render="form_users_list"/>
-                    </h:commandButton>
-                </h:column>
-            </h:dataTable>           
-        </h:form>
+                <p:dataTable id="table_add" value="#{editarProduto.adicaoUsuario()}" var="usuario" >
+                    <p:column>
+                        <h:outputText value="#{usuario.UNome}" />
+                    </p:column>
+
+                    <p:column>
+                        <p:commandButton value="Adicionar" actionListener="#{editarProduto.adicionarUsuario(usuario)}" update=":edit_panel" >
+                            <f:ajax execute="click" render="form_users_list"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>           
+            </h:form>
+        </p:panel>
     </body>
 </html>
