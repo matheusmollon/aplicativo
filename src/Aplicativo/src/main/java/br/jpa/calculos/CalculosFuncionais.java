@@ -13,6 +13,7 @@ import br.jpa.entity.Produto;
 import br.jpa.entity.Usuario;
 import br.jpa.entity.UsuarioConta;
 import br.web.bean.ProdutoBean;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,7 +50,7 @@ public class CalculosFuncionais {
     }
 
     public double calcularValorTotalConta() {
-        return calcularSomaTotalSemPorcetagem() + calcularPorcentagem(calcularSomaTotalSemPorcetagem());
+        return formatar(calcularSomaTotalSemPorcetagem() + calcularPorcentagem(calcularSomaTotalSemPorcetagem()));
 
     }
 
@@ -72,7 +73,8 @@ public class CalculosFuncionais {
         double valorTaxaServico = (calcularPorcentagem(calcularSomaTotalSemPorcetagem()) / c.getUsuarioContaCollection().size());
         System.out.println("Taxa: " + valorTaxaServico);
         for (UsuarioConta csa : ucs) {
-            csa.setUCValor(valorTaxaServico);
+            
+            csa.setUCValor(formatar(valorTaxaServico));
         }
 
         for (Produto p : produtos) {
@@ -81,8 +83,7 @@ public class CalculosFuncionais {
 
             for (UsuarioConta uc : ucs) {
                 if (usuarios.contains(uc.getUsuario())) {
-
-                    uc.setUCValor(uc.getUCValor() + valor);
+                    uc.setUCValor(formatar(uc.getUCValor() + valor));
                 }
             }
 
@@ -99,7 +100,7 @@ public class CalculosFuncionais {
 
     public void EncerrarConta() {
         c.setCFechada(true);
-      
+
         try {
             ContaJpaController.getInstance().edit(c);
         } catch (NonexistentEntityException ex) {
@@ -107,13 +108,22 @@ public class CalculosFuncionais {
         } catch (Exception ex) {
             Logger.getLogger(CalculosFuncionais.class.getName()).log(Level.SEVERE, null, ex);
         }
-      
+
     }
 
     public final void FecharConta() {
         this.peristirValorTotalConta();
         this.calcularQuantiaPorPessoa();
         this.EncerrarConta();
+
+    }
+
+    public double formatar(double valor) {
+        DecimalFormat fmt = new DecimalFormat("#.##");
+        String stringFormatada = fmt.format(valor);
+        String[] partes = stringFormatada.split(",");
+        String stringFormatacao = partes[0] + "." + partes[1];
+        return Double.parseDouble(stringFormatacao);
 
     }
 

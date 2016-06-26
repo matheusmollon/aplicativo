@@ -13,6 +13,7 @@ import br.jpa.entity.Produto;
 import br.jpa.entity.Usuario;
 import br.web.utils.SessionContext;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,7 +21,6 @@ import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-
 
 /**
  *
@@ -66,7 +66,7 @@ public class EditarProduto {
         Produto p = new Produto();
         p.setPId(this.produto.getPId());
         p.setPNome(this.produto.getPNome());
-        p.setPValor(this.produto.getPValor());
+        p.setPValor(formatar(this.produto.getPValor()));
         p.setCId(this.produto.getCId());
         p.setUsuarioCollection(CacheProduto.getInstance().getUsers());
         p.setCId(recuperarConta());
@@ -140,10 +140,19 @@ public class EditarProduto {
         }
         return resposta;
     }
-    
-      private Conta recuperarConta() {
+
+    private Conta recuperarConta() {
         Conta contaSession = ContaJpaController.getInstance().findConta((int) SessionContext.getInstance().getSessionAttribute("cId"));
         return contaSession;
+    }
+
+    public double formatar(double valor) {
+        DecimalFormat fmt = new DecimalFormat("#.##");
+        String stringFormatada = fmt.format(valor);
+        String[] partes = stringFormatada.split(",");
+        String stringFormatacao = partes[0] + "." + partes[1];
+        return Double.parseDouble(stringFormatacao);
+
     }
 
 }

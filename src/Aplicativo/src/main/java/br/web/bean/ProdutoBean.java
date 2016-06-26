@@ -17,6 +17,7 @@ import br.jpa.entity.Usuario;
 import br.jpa.entity.UsuarioConta;
 import br.web.utils.SessionContext;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -62,6 +63,15 @@ public class ProdutoBean {
         this.selecionados = selecionados;
     }
 
+    public double formatar(double valor) {
+        DecimalFormat fmt = new DecimalFormat("#.##");
+        String stringFormatada = fmt.format(valor);
+        String[] partes = stringFormatada.split(",");
+        String stringFormatacao = partes[0] + "." + partes[1];
+        return Double.parseDouble(stringFormatacao);
+
+    }
+
     public void adicionar() {
         ProdutoJpaController pjc = ProdutoJpaController.getInstance();
         UsuarioJpaController ujc = UsuarioJpaController.getInstance();
@@ -75,7 +85,7 @@ public class ProdutoBean {
         Produto p = new Produto();
         p.setPId(pjc.findProdutoEntities().size() + 1);
         p.setPNome(produto);
-        p.setPValor(preco);
+        p.setPValor(formatar(preco));
         p.setCId(recuperarConta());
         for (Usuario u : users) {
             System.out.println(u.toString());
@@ -162,7 +172,7 @@ public class ProdutoBean {
         try {
             CalculosFuncionais cf = new CalculosFuncionais(recuperarConta(), this.taxaServico);
             cf.FecharConta();
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/conta_finalizada-1.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/visualizar_conta.xhtml");
         } catch (IOException ex) {
             Logger.getLogger(ProdutoBean.class.getName()).log(Level.SEVERE, null, ex);
         }
