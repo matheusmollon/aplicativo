@@ -165,15 +165,16 @@ public class ProdutoBean {
         return users_por_produto;
     }
 
-    public void limparDetalhes() {
-        users_por_produto = new ArrayList<>();
-    }
-
     public void fecharConta() {
         try {
-            CalculosFuncionais cf = new CalculosFuncionais(recuperarConta(), this.taxaServico);
-            cf.FecharConta();
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/visualizar_conta.xhtml");
+            Conta conta = recuperarConta();
+            if (conta.getProdutoCollection().isEmpty()) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Não é possível fechar uma conta vazia", ""));
+            } else {
+                CalculosFuncionais cf = new CalculosFuncionais(recuperarConta(), this.taxaServico);
+                cf.FecharConta();
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/Aplicativo/faces/visualizar_conta.xhtml");
+            }
         } catch (IOException ex) {
             Logger.getLogger(ProdutoBean.class.getName()).log(Level.SEVERE, null, ex);
         }

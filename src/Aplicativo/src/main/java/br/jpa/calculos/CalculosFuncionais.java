@@ -14,6 +14,7 @@ import br.jpa.entity.Usuario;
 import br.jpa.entity.UsuarioConta;
 import br.web.bean.ProdutoBean;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,24 +71,27 @@ public class CalculosFuncionais {
         UsuarioContaJpaController ucjc = UsuarioContaJpaController.getInstance();
         List<UsuarioConta> ucs = ucjc.getUsuarioContaPorId(c.getCId());
         List<Produto> produtos = (List<Produto>) c.getProdutoCollection();
-        double valorTaxaServico = (calcularPorcentagem(calcularSomaTotalSemPorcetagem()) / c.getUsuarioContaCollection().size());
-        System.out.println("Taxa: " + valorTaxaServico);
-        for (UsuarioConta csa : ucs) {
-            
-            csa.setUCValor(formatar(valorTaxaServico));
-        }
-
+        int i = 0;
         for (Produto p : produtos) {
             List<Usuario> usuarios = (List<Usuario>) p.getUsuarioCollection();
             double valor = (p.getPValor() / usuarios.size());
 
             for (UsuarioConta uc : ucs) {
                 if (usuarios.contains(uc.getUsuario())) {
+                    i++;
                     uc.setUCValor(formatar(uc.getUCValor() + valor));
                 }
             }
 
         }
+        double valorTaxaServico = (calcularPorcentagem(calcularSomaTotalSemPorcetagem()) / i);
+        System.out.println("Taxa: " + valorTaxaServico);
+        for (UsuarioConta csa : ucs) {
+            if (csa.getUCValor() > 0.0) {
+                csa.setUCValor(formatar(csa.getUCValor()+valorTaxaServico));
+            }
+        }
+
         for (UsuarioConta csa : ucs) {
             try {
                 ucjc.edit(csa);

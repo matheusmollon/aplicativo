@@ -124,16 +124,19 @@
                             </p:selectCheckboxMenu>
                         </h:panelGrid>
 
-                        <h:panelGrid columns="2" style="float: right">
+                        <h:panelGrid columns="2" style="float: left; display: inline-block">
                             <p:commandButton value="Adicionar" 
                                              update=":panelProdutos"
                                              action="#{produtoBean.adicionar()}" />
-
-                            <p:commandButton value="Limpar" 
-                                             actionListener="#{produtoBean.clean()}" />
+                         
+                                <p:commandButton value="Limpar" 
+                                                 actionListener="#{produtoBean.clean()}" update=":tabView:add_form"/>
+                            
                         </h:panelGrid>
                     </h:panelGrid>
                 </h:form>
+
+
             </p:tab>
         </p:tabView>
 
